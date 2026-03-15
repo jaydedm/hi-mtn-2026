@@ -1,6 +1,6 @@
 # Hi-Mountain 🏔️
 
-A rustic burger restaurant website built with Next.js, featuring a public-facing site and an admin dashboard.
+A rustic burger restaurant website built with Next.js, featuring a public-facing site and an admin dashboard. Woo!
 
 ## Tech Stack
 
@@ -79,12 +79,14 @@ src/
 ## Features
 
 ### Public
+
 - **Home:** Hero section + About Us content in styled sections
 - **Hours:** Weekly schedule table, current day highlighted, live "Open/Closed" indicator based on Mountain Time
 - **Menu:** Opens a PDF in a new tab (placeholder at `public/menu.pdf`)
 - **Banner:** Conditionally rendered site-wide announcement with start/end dates
 
 ### Admin (`/admin`)
+
 - Protected by Clerk authentication
 - Edit open/close times for each day of the week
 - Manage the global banner (text, active toggle, date range)
