@@ -49,7 +49,7 @@ export function HoursClient({ hours }: { hours: HoursRow[] }) {
 
   return (
     <div className="max-w-2xl mx-auto py-16 px-6">
-      <h1 className="font-serif text-4xl font-bold text-forest-dark text-center mb-2">
+      <h1 className="font-brand text-4xl font-bold text-forest-dark text-center mb-2">
         Our Hours
       </h1>
       <p className="text-center text-wood text-sm mb-8">
@@ -60,47 +60,42 @@ export function HoursClient({ hours }: { hours: HoursRow[] }) {
       <div
         className={`text-center py-4 px-6 rounded-lg mb-10 text-xl font-bold font-serif ${
           open
-            ? "bg-forest text-mustard"
-            : "bg-wood text-cream"
+            ? "bg-green-300/40 text-green-900"
+            : "bg-red-300/40 text-red-900"
         }`}
       >
         {open ? "✦ Yes, we're open! ✦" : "Sorry, we are closed."}
       </div>
 
-      {/* Hours table */}
-      <div className="rounded-lg border border-border overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="bg-forest text-cream">
-              <th className="text-left py-3 px-4 font-semibold">Day</th>
-              <th className="text-right py-3 px-4 font-semibold">Hours</th>
-            </tr>
-          </thead>
-          <tbody>
-            {hours.map((row) => (
-              <tr
-                key={row.dayOfWeek}
-                className={`border-t border-border ${
-                  row.dayOfWeek === today
-                    ? "bg-mustard/20 font-semibold"
-                    : "even:bg-cream-dark"
-                }`}
-              >
-                <td className="py-3 px-4">
-                  {DAY_NAMES[row.dayOfWeek]}
-                  {row.dayOfWeek === today && (
-                    <span className="ml-2 text-xs text-mustard font-bold">← Today</span>
-                  )}
-                </td>
-                <td className="py-3 px-4 text-right">
-                  {row.isClosed || !row.openTime || !row.closeTime
-                    ? "Closed"
-                    : `${formatTime(row.openTime)} – ${formatTime(row.closeTime)}`}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Hours list */}
+      <div className="space-y-2">
+        {hours.map((row) => {
+          const isToday = row.dayOfWeek === today;
+          return (
+            <div
+              key={row.dayOfWeek}
+              className={`flex items-center justify-between py-3 px-4 rounded-lg ${
+                isToday
+                  ? "border-2 border-mustard bg-mustard/15 font-semibold"
+                  : ""
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span>{DAY_NAMES[row.dayOfWeek]}</span>
+                {isToday && (
+                  <span className="bg-mustard text-forest-dark text-xs font-bold px-3 py-0.5 rounded-full">
+                    Today
+                  </span>
+                )}
+              </div>
+              <span>
+                {row.isClosed || !row.openTime || !row.closeTime
+                  ? "Closed"
+                  : `${formatTime(row.openTime)} – ${formatTime(row.closeTime)}`}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

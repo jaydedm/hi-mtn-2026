@@ -10,15 +10,16 @@ export default async function AdminBannerPage() {
     ? {
         id: banner.id,
         bannerText: banner.bannerText,
+        bannerType: banner.bannerType as "casual" | "emergency",
         isActive: banner.isActive,
-        startDate: banner.startDate.toISOString().slice(0, 16),
-        endDate: banner.endDate.toISOString().slice(0, 16),
+        startDate: banner.startDate?.toISOString().slice(0, 16) ?? "",
+        endDate: banner.endDate?.toISOString().slice(0, 16) ?? "",
       }
     : null;
 
   return (
     <div>
-      <h1 className="font-serif text-3xl font-bold text-forest-dark mb-6">
+      <h1 className="font-brand text-3xl font-bold text-forest-dark mb-6">
         Manage Global Banner
       </h1>
       <BannerForm initial={serialized} />

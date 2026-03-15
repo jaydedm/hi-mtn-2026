@@ -8,12 +8,12 @@ const links = [
   { href: "/hours", label: "Hours" },
 ];
 
-export function Navbar() {
+export function Navbar({ menuUrl }: { menuUrl: string }) {
   const pathname = usePathname();
 
   return (
     <nav className="bg-forest text-cream px-6 py-4 flex items-center justify-between">
-      <Link href="/" className="font-serif text-2xl font-bold text-mustard tracking-wide">
+      <Link href="/" className="font-brand text-2xl font-bold text-mustard tracking-wide">
         Hi-Mountain
       </Link>
       <div className="flex items-center gap-6">
@@ -29,7 +29,7 @@ export function Navbar() {
           </Link>
         ))}
         <a
-          href="/menu.pdf"
+          href={menuUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="bg-mustard text-forest-dark px-4 py-2 rounded font-semibold hover:bg-mustard-light transition-colors"

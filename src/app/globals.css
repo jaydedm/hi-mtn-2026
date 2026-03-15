@@ -9,6 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-serif: var(--font-serif);
+  --font-brand: var(--font-brand);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -48,49 +49,50 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   /* Hi-Mountain custom colors */
-  --color-forest: #2d4a22;
-  --color-forest-dark: #1a2e14;
+  /* Casual banner shimmer */
+  --color-forest: #2f170f;
+  --color-forest-dark: #1e0e08;
   --color-wood: #6b4226;
   --color-wood-light: #8b6340;
   --color-cream: #faf5e8;
   --color-cream-dark: #f0e8d0;
-  --color-mustard: #d4a017;
-  --color-mustard-light: #e8b830;
+  --color-mustard: #e6a756;
+  --color-mustard-light: #edb96f;
 }
 
 :root {
   --background: #faf5e8;
-  --foreground: #1a2e14;
+  --foreground: #1e0e08;
   --card: #f0e8d0;
-  --card-foreground: #1a2e14;
+  --card-foreground: #1e0e08;
   --popover: #faf5e8;
-  --popover-foreground: #1a2e14;
-  --primary: #2d4a22;
+  --popover-foreground: #1e0e08;
+  --primary: #2f170f;
   --primary-foreground: #faf5e8;
   --secondary: #f0e8d0;
-  --secondary-foreground: #2d4a22;
+  --secondary-foreground: #2f170f;
   --muted: #f0e8d0;
   --muted-foreground: #6b4226;
-  --accent: #d4a017;
-  --accent-foreground: #1a2e14;
+  --accent: #e6a756;
+  --accent-foreground: #1e0e08;
   --destructive: #b91c1c;
   --border: #c8b88a;
   --input: #c8b88a;
-  --ring: #2d4a22;
-  --chart-1: #2d4a22;
+  --ring: #2f170f;
+  --chart-1: #2f170f;
   --chart-2: #6b4226;
-  --chart-3: #d4a017;
+  --chart-3: #e6a756;
   --chart-4: #8b6340;
-  --chart-5: #1a2e14;
+  --chart-5: #1e0e08;
   --radius: 0.5rem;
   --sidebar: #faf5e8;
-  --sidebar-foreground: #1a2e14;
-  --sidebar-primary: #2d4a22;
+  --sidebar-foreground: #1e0e08;
+  --sidebar-primary: #2f170f;
   --sidebar-primary-foreground: #faf5e8;
   --sidebar-accent: #f0e8d0;
-  --sidebar-accent-foreground: #2d4a22;
+  --sidebar-accent-foreground: #2f170f;
   --sidebar-border: #c8b88a;
-  --sidebar-ring: #2d4a22;
+  --sidebar-ring: #2f170f;
 }
 
 @layer base {
@@ -100,4 +102,15 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+}
+
+@keyframes shimmer-border {
+  0%, 100% { border-color: #e6a756; }
+  50% { border-color: #fff3d6; }
+}
+
+.banner-casual {
+  animation: shimmer-border 2s ease-in-out 3;
+  border-top: 3px solid #e6a756;
+  border-bottom: 3px solid #e6a756;
 }

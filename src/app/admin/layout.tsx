@@ -6,7 +6,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-cream">
       <header className="bg-forest-dark text-cream px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link href="/admin" className="font-serif text-lg font-bold text-mustard">
+          <Link href="/admin" className="font-brand text-lg font-bold text-mustard">
             Admin Dashboard
           </Link>
           <Link href="/" className="text-sm text-cream/70 hover:text-cream">

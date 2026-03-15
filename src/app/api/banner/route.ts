@@ -6,19 +6,21 @@ export async function PUT(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const body = await req.json();
-  const { id, bannerText, isActive, startDate, endDate } = body;
+  const { id, bannerText, bannerType, isActive, startDate, endDate } = await req.json();
+
+  const data = {
+    bannerText,
+    bannerType: bannerType || "casual",
+    isActive,
+    startDate: startDate ? new Date(startDate) : null,
+    endDate: endDate ? new Date(endDate) : null,
+  };
 
   if (id) {
-    const updated = await prisma.globalBanner.update({
-      where: { id },
-      data: { bannerText, isActive, startDate: new Date(startDate), endDate: new Date(endDate) },
-    });
+    const updated = await prisma.globalBanner.update({ where: { id }, data });
     return NextResponse.json(updated);
   }
 
-  const created = await prisma.globalBanner.create({
-    data: { bannerText, isActive, startDate: new Date(startDate), endDate: new Date(endDate) },
-  });
+  const created = await prisma.globalBanner.create({ data });
   return NextResponse.json(created);
 }

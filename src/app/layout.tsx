@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Banner } from "@/components/banner";
+import { getActiveMenuUrl } from "@/lib/menu";
 
 const serif = Playfair_Display({
   subsets: ["latin"],
@@ -16,26 +17,49 @@ const sans = Inter({
   variable: "--font-sans",
 });
 
+const brand = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-brand",
+  weight: ["700", "800"],
+});
+
 export const metadata: Metadata = {
-  title: "Hi-Mountain | Juicy Burgers & Homestyle Fries",
+  title: "Hi-Mountain | Best Burgers in Utah | 16× Best of State Winner",
   description:
-    "Juicy Burgers. Homestyle Fries. Thick Milkshakes. A walk down memory lane since 1918.",
+    "Hi-Mountain serves the best burgers in Utah with homestyle fries and thick milkshakes. A 16-time Best of State award winner since 1918.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const menuUrl = await getActiveMenuUrl();
+
   return (
     <ClerkProvider>
-      <html lang="en" className={`${serif.variable} ${sans.variable}`}>
+      <html lang="en" suppressHydrationWarning className={`${serif.variable} ${sans.variable} ${brand.variable}`}>
         <body className="min-h-screen flex flex-col">
           <Banner />
-          <Navbar />
+          <Navbar menuUrl={menuUrl} />
           <main className="flex-1">{children}</main>
           <footer className="bg-forest-dark text-cream py-8 text-center text-sm">
-            <p>© {new Date().getFullYear()} Hi-Mountain. All rights reserved.</p>
+            <a
+              href="https://www.google.com/maps/dir/?api=1&destination=40+N+Main+St,+Kamas,+UT+84036"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-mustard hover:text-mustard-light underline underline-offset-2"
+            >
+              40 N Main St, Kamas, UT 84036
+            </a>
+            <span className="mx-2">·</span>
+            <a
+              href="mailto:<email>"
+              className="text-mustard hover:text-mustard-light underline underline-offset-2"
+            >
+              Contact Us
+            </a>
+            <p className="mt-2">© {new Date().getFullYear()} Hi-Mountain. All rights reserved.</p>
           </footer>
         </body>
       </html>

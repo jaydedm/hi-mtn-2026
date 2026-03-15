@@ -15,7 +15,7 @@ export default async function AdminHoursPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-3xl font-bold text-forest-dark mb-6">
+      <h1 className="font-brand text-3xl font-bold text-forest-dark mb-6">
         Edit Operating Hours
       </h1>
       <HoursForm initial={serialized} />
