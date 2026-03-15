@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Playfair_Display, Inter, Plus_Jakarta_Sans } from "next/font/google";
+
+export const dynamic = "force-dynamic";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Banner } from "@/components/banner";
