@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Hi-Mountain 🏔️
+
+A rustic burger restaurant website built with Next.js, featuring a public-facing site and an admin dashboard.
+
+## Tech Stack
+
+- **Framework:** Next.js (App Router), React, TypeScript
+- **Styling:** Tailwind CSS + Shadcn UI
+- **Database:** PostgreSQL + Prisma ORM
+- **Auth:** Clerk
+- **Time Handling:** date-fns + date-fns-tz (Mountain Time)
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Set up Clerk
+
+1. Create a free account at [clerk.com](https://clerk.com)
+2. Create a new application
+3. Copy your keys into `.env`:
+
+```
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YOUR_KEY
+CLERK_SECRET_KEY=sk_test_YOUR_KEY
+```
+
+### 3. Set up the database
+
+Start a local Prisma Postgres instance, run migrations, and seed default hours:
+
+```bash
+npx prisma dev
+npx prisma db seed
+```
+
+Or if using an external PostgreSQL (Supabase, Vercel Postgres, etc.), update `DATABASE_URL` in `.env` and run:
+
+```bash
+npx prisma migrate dev --name init
+npx prisma db seed
+```
+
+### 4. Run the dev server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/
+│   ├── page.tsx              # Home (Hero + About Us)
+│   ├── hours/                # Public hours page (Mountain Time logic)
+│   ├── admin/                # Protected admin dashboard
+│   │   ├── hours/            # Edit operating hours
+│   │   └── banner/           # Manage global banner
+│   └── api/
+│       ├── hours/route.ts    # PUT - update hours
+│       └── banner/route.ts   # PUT - create/update banner
+├── components/
+│   ├── navbar.tsx            # Global nav (Home, Hours, Menu PDF)
+│   ├── banner.tsx            # Conditional announcement banner
+│   └── ui/                   # Shadcn UI components
+├── lib/
+│   ├── prisma.ts             # Prisma client singleton
+│   └── utils.ts              # Shadcn utilities
+└── middleware.ts              # Clerk auth (protects /admin)
+```
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+### Public
+- **Home:** Hero section + About Us content in styled sections
+- **Hours:** Weekly schedule table, current day highlighted, live "Open/Closed" indicator based on Mountain Time
+- **Menu:** Opens a PDF in a new tab (placeholder at `public/menu.pdf`)
+- **Banner:** Conditionally rendered site-wide announcement with start/end dates
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Admin (`/admin`)
+- Protected by Clerk authentication
+- Edit open/close times for each day of the week
+- Manage the global banner (text, active toggle, date range)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Design Theme
 
-## Deploy on Vercel
+"National Forest Sign" — deep forest greens, wood browns, cream backgrounds, mustard-yellow accents. Playfair Display for headings, Inter for body text.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## TODO
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Replace `public/menu.pdf` with the real menu
+- [ ] Add images to the Home page (hero background, about sections)
+- [ ] Deploy to Vercel and connect a production PostgreSQL database
+- [ ] Configure Clerk production keys
+- [ ] Add mobile-responsive hamburger menu to navbar
