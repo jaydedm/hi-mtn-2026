@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model OperatingHours {
+  id        String   @id @default(cuid())
+  dayOfWeek Int      @unique // 0 = Sunday, 6 = Saturday
+  openTime  String?  // "HH:mm" in Mountain Time, null = closed
+  closeTime String?  // "HH:mm" in Mountain Time, null = closed
+  isClosed  Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+}
+
+model GlobalBanner {
+  id         String   @id @default(cuid())
+  bannerText String
+  isActive   Boolean  @default(false)
+  startDate  DateTime
+  endDate    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
