@@ -11,11 +11,11 @@ function createClient() {
     process.env.DIRECT_DATABASE_URL ||
     "postgres://postgres:postgres@localhost:51214/template1";
 
-  const isRemote = !connectionString.includes("localhost");
-
   const pool = new pg.Pool({
     connectionString,
-    ssl: isRemote ? { rejectUnauthorized: false } : false,
+    ssl: process.env.DIRECT_DATABASE_URL
+      ? { rejectUnauthorized: false }
+      : false,
   });
   return new PrismaClient({ adapter: new PrismaPg(pool) });
 }
