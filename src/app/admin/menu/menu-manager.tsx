@@ -4,6 +4,8 @@ import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+const MAX_FILE_SIZE = 4.5 * 1024 * 1024; // 4.5 MB
+
 type Menu = {
   id: string;
   filename: string;
@@ -16,7 +18,6 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
   const [menus, setMenus] = useState<Menu[]>(initial);
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-
   const [error, setError] = useState("");
 
   const refresh = async () => {
@@ -24,25 +25,33 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
     if (res.ok) setMenus(await res.json());
   };
 
-  const upload = async (file: File) => {
+  const upload = useCallback(async (file: File) => {
     setError("");
-    if (file.type !== "application/pdf") return setError("Only PDF files are allowed.");
-    const maxSize = 4.5 * 1024 * 1024;
-    if (file.size > maxSize) {
+
+    if (file.type !== "application/pdf") {
+      return setError("Only PDF files are allowed.");
+    }
+    if (file.size > MAX_FILE_SIZE) {
       const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
       return setError(`File is ${sizeMB} MB — maximum allowed size is 4.5 MB.`);
     }
+
     setUploading(true);
-    const form = new FormData();
-    form.append("file", file);
-    const res = await fetch("/api/menu", { method: "POST", body: form });
-    if (!res.ok) {
-      setError("Upload failed. Please try a smaller file.");
-    } else {
-      await refresh();
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/menu", { method: "POST", body: form });
+      if (!res.ok) {
+        setError("Upload failed. Please try a smaller file.");
+      } else {
+        await refresh();
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setUploading(false);
     }
-    setUploading(false);
-  };
+  }, []);
 
   const setActive = async (id: string) => {
     await fetch("/api/menu", {
@@ -63,23 +72,32 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
     await refresh();
   };
 
-  const onDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) upload(file);
-  }, []);
+  const onDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragOver(false);
+      const file = e.dataTransfer.files[0];
+      if (file) upload(file);
+    },
+    [upload]
+  );
 
   const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) upload(file);
   };
 
+  /** Strip the timestamp prefix from the stored filename for display. */
+  const displayName = (filename: string) => filename.replace(/^\d+-/, "");
+
   return (
     <div className="space-y-6">
       {/* Drop zone */}
       <div
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
         className={`border-2 border-dashed rounded-lg p-10 text-center transition-colors ${
@@ -92,7 +110,12 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
         <p className="text-sm text-muted-foreground mb-4">or</p>
         <label className="inline-block cursor-pointer bg-forest text-cream px-4 py-2 rounded font-semibold hover:bg-forest-dark transition-colors">
           Browse Files
-          <input type="file" accept=".pdf" onChange={onFileSelect} className="hidden" />
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={onFileSelect}
+            className="hidden"
+          />
         </label>
         {error && (
           <p className="mt-4 text-red-600 font-semibold text-sm">{error}</p>
@@ -115,7 +138,10 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
             </thead>
             <tbody>
               {menus.map((m) => (
-                <tr key={m.id} className="border-t border-border even:bg-cream-dark">
+                <tr
+                  key={m.id}
+                  className="border-t border-border even:bg-cream-dark"
+                >
                   <td className="py-3 px-4">
                     <a
                       href={m.url}
@@ -123,7 +149,7 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
                       rel="noopener noreferrer"
                       className="text-forest underline hover:text-mustard"
                     >
-                      {m.filename.replace(/^\d+-/, "")}
+                      {displayName(m.filename)}
                     </a>
                   </td>
                   <td className="py-3 px-4 text-sm text-muted-foreground">
@@ -138,11 +164,19 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
                   </td>
                   <td className="py-3 px-4 text-right space-x-2">
                     {!m.isActive && (
-                      <Button size="sm" onClick={() => setActive(m.id)} className="bg-mustard text-forest-dark hover:bg-mustard-light">
+                      <Button
+                        size="sm"
+                        onClick={() => setActive(m.id)}
+                        className="bg-mustard text-forest-dark hover:bg-mustard-light"
+                      >
                         Set Active
                       </Button>
                     )}
-                    <Button size="sm" variant="destructive" onClick={() => remove(m.id)}>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      onClick={() => remove(m.id)}
+                    >
                       Delete
                     </Button>
                   </td>

@@ -16,14 +16,22 @@ type BannerData = {
   endDate: string;
 };
 
-const empty: BannerData = { bannerText: "", bannerType: "casual", isActive: false, startDate: "", endDate: "" };
+const EMPTY: BannerData = {
+  bannerText: "",
+  bannerType: "casual",
+  isActive: false,
+  startDate: "",
+  endDate: "",
+};
 
 export function BannerForm({ initial }: { initial: BannerData | null }) {
-  const baseline = useMemo(() => initial ?? empty, []);
+  const baseline = useMemo(() => initial ?? EMPTY, [initial]);
   const [data, setData] = useState<BannerData>(baseline);
   const [saving, setSaving] = useState(false);
   const [previewed, setPreviewed] = useState(false);
-  const [showDates, setShowDates] = useState(baseline.startDate !== "" || baseline.endDate !== "");
+  const [showDates, setShowDates] = useState(
+    baseline.startDate !== "" || baseline.endDate !== ""
+  );
   const [msg, setMsg] = useState("");
   const router = useRouter();
 
@@ -37,38 +45,55 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
   const needsEndDate = data.startDate !== "" && data.endDate === "";
   const canSave = hasChanges && !needsEndDate && (previewed || !data.isActive);
 
-  const patch = (p: Partial<BannerData>) => { setData((d) => ({ ...d, ...p })); setMsg(""); setPreviewed(false); };
+  const patch = (updates: Partial<BannerData>) => {
+    setData((prev) => ({ ...prev, ...updates }));
+    setMsg("");
+    setPreviewed(false);
+  };
 
   const save = async () => {
     setSaving(true);
     setMsg("");
-    // Convert datetime-local values to full ISO strings with the admin's timezone
+
     const payload = {
       ...data,
       startDate: data.startDate ? new Date(data.startDate).toISOString() : "",
       endDate: data.endDate ? new Date(data.endDate).toISOString() : "",
     };
-    const res = await fetch("/api/banner", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    setSaving(false);
-    if (res.ok) {
-      const result = await res.json();
-      patch({ id: result.id });
-      setMsg("Saved!");
-      router.refresh();
-    } else {
-      setMsg("Error saving.");
+
+    try {
+      const res = await fetch("/api/banner", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        patch({ id: result.id });
+        setMsg("Saved!");
+        setPreviewed(true); // Keep previewed after successful save
+        router.refresh();
+      } else {
+        setMsg("Error saving.");
+      }
+    } catch {
+      setMsg("Network error. Please try again.");
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
     <div className="space-y-6 bg-card border border-border rounded-lg p-6 max-w-xl">
+      {/* Banner Text */}
       <div className="space-y-2">
         <Label>Banner Text</Label>
-        <Input value={data.bannerText} onChange={(e) => patch({ bannerText: e.target.value })} placeholder="e.g. Closed today due to weather" />
+        <Input
+          value={data.bannerText}
+          onChange={(e) => patch({ bannerText: e.target.value })}
+          placeholder="e.g. Closed today due to weather"
+        />
       </div>
 
       {/* Banner Type */}
@@ -100,10 +125,16 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
         </div>
       </div>
 
+      {/* Active Toggle */}
       <div className="flex items-center gap-3">
-        <Switch checked={data.isActive} onCheckedChange={(v) => patch({ isActive: v })} />
+        <Switch
+          checked={data.isActive}
+          onCheckedChange={(v) => patch({ isActive: v })}
+        />
         <Label>{data.isActive ? "Active" : "Inactive"}</Label>
       </div>
+
+      {/* Schedule Dates Toggle */}
       <div className="flex items-center gap-3">
         <Switch
           checked={showDates}
@@ -114,12 +145,14 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
         />
         <Label>Schedule display dates</Label>
       </div>
+
       {showDates ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Start Date/Time</Label>
             <Input
-              type="datetime-local" autoComplete="off"
+              type="datetime-local"
+              autoComplete="off"
               value={data.startDate}
               onChange={(e) => patch({ startDate: e.target.value })}
             />
@@ -127,7 +160,8 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
           <div className="space-y-2">
             <Label>End Date/Time</Label>
             <Input
-              type="datetime-local" autoComplete="off"
+              type="datetime-local"
+              autoComplete="off"
               value={data.endDate}
               onChange={(e) => patch({ endDate: e.target.value })}
             />
@@ -138,11 +172,13 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
           No expiration — banner stays active until manually toggled off
         </span>
       )}
+
       {needsEndDate && (
         <p className="text-xs text-red-600 font-semibold">
           An end date is required when a start date is set.
         </p>
       )}
+
       {/* Preview */}
       {previewed && data.bannerText && (
         <div className="space-y-2">
@@ -159,6 +195,8 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
           </div>
         </div>
       )}
+
+      {/* Actions */}
       <div className="flex items-center gap-4">
         {data.isActive && hasChanges && !needsEndDate && data.bannerText && (
           <Button
@@ -178,7 +216,9 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
         >
           {saving ? "Saving..." : "Save Banner"}
         </Button>
-        {msg && <span className="text-sm font-semibold text-mustard">{msg}</span>}
+        {msg && (
+          <span className="text-sm font-semibold text-mustard">{msg}</span>
+        )}
       </div>
     </div>
   );

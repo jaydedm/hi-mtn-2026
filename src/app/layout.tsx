@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Playfair_Display, Inter, Plus_Jakarta_Sans } from "next/font/google";
-
-export const dynamic = "force-dynamic";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Banner } from "@/components/banner";
 import { getActiveMenuUrl } from "@/lib/menu";
+
+export const dynamic = "force-dynamic";
 
 const serif = Playfair_Display({
   subsets: ["latin"],
@@ -31,6 +32,8 @@ export const metadata: Metadata = {
     "Hi-Mountain serves the best burgers in Utah with homestyle fries and thick milkshakes. A 16-time Best of State award winner since 1918.",
 };
 
+const GA_ID = "G-GE5E2TPZ76";
+
 export default async function RootLayout({
   children,
 }: {
@@ -40,14 +43,19 @@ export default async function RootLayout({
 
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning className={`${serif.variable} ${sans.variable} ${brand.variable}`}>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={`${serif.variable} ${sans.variable} ${brand.variable}`}
+      >
         <head>
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-GE5E2TPZ76" />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-GE5E2TPZ76');`,
-            }}
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+            strategy="afterInteractive"
           />
+          <Script id="gtag-init" strategy="afterInteractive">
+            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${GA_ID}');`}
+          </Script>
         </head>
         <body className="min-h-screen flex flex-col">
           <Banner />
@@ -69,7 +77,9 @@ export default async function RootLayout({
             >
               Contact Us
             </a>
-            <p className="mt-2">© {new Date().getFullYear()} Hi-Mountain. All rights reserved.</p>
+            <p className="mt-2">
+              © {new Date().getFullYear()} Hi-Mountain. All rights reserved.
+            </p>
           </footer>
         </body>
       </html>
