@@ -7,6 +7,7 @@ export default async function AdminMenuPage() {
   const serialized = menus.map((m) => ({
     id: m.id,
     filename: m.filename,
+    url: m.url,
     isActive: m.isActive,
     createdAt: m.createdAt.toISOString(),
   }));

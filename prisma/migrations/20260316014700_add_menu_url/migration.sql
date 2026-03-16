@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "MenuPdf" ADD COLUMN "url" TEXT NOT NULL DEFAULT '';

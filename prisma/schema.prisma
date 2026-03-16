@@ -29,6 +29,7 @@ model GlobalBanner {
 model MenuPdf {
   id        String   @id @default(cuid())
   filename  String
+  url       String   @default("")
   isActive  Boolean  @default(false)
   createdAt DateTime @default(now())
 }

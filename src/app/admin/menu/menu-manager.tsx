@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 type Menu = {
   id: string;
   filename: string;
+  url: string;
   isActive: boolean;
   createdAt: string;
 };
@@ -117,7 +118,7 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
                 <tr key={m.id} className="border-t border-border even:bg-cream-dark">
                   <td className="py-3 px-4">
                     <a
-                      href={`/menus/${m.filename}`}
+                      href={m.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-forest underline hover:text-mustard"
