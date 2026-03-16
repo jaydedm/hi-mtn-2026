@@ -68,7 +68,7 @@ export default function HomePage() {
         className="py-16 px-6"
       >
         <div className="max-w-4xl mx-auto text-center">
-          <p className="font-brand text-2xl md:text-3xl text-forest-dark leading-relaxed">
+          <p className="font-brand text-2xl md:text-3xl text-wood leading-relaxed">
             Something we all grew up with. Something we can&rsquo;t always find.
             In a world of strip malls and fast food chains...
             <span className="relative inline-block text-mustard font-bold font-serif italic">
@@ -121,15 +121,15 @@ export default function HomePage() {
         className="py-16 px-6"
       >
         <div className="max-w-3xl mx-auto text-center md:text-left">
-          <h2 className="font-brand text-3xl font-bold text-forest-dark mb-6 text-center">
+          <h2 className="font-brand text-3xl font-bold text-wood mb-6 text-center">
             The Drug Store
           </h2>
           <p className="text-lg leading-relaxed text-wood mb-6">
-            Built in <span className="font-bold text-forest-dark">1918</span> as
+            Built in <span className="font-bold text-wood">1918</span> as
             a confectionary, the store has had very few changes since it first
             opened its doors. Although the pharmacy is now closed, we are still
             — and most likely will be for years to come — fondly known as{" "}
-            <span className="relative inline-block font-bold text-forest-dark font-serif italic">
+            <span className="relative inline-block font-bold text-wood font-serif italic">
               <span className="relative z-10">
                 &ldquo;The Drug Store.&rdquo;
               </span>
@@ -141,18 +141,18 @@ export default function HomePage() {
           </p>
           <p className="text-lg leading-relaxed text-wood">
             So,{" "}
-            <span className="font-bold text-forest-dark">
+            <span className="font-bold text-wood">
               belly up to the bar
             </span>
             , enjoy some down-home service, and take a walk down memory lane.
             Before you go, peek below the old-fashioned ice cream counter at the{" "}
-            <span className="font-serif italic text-forest-dark">
+            <span className="font-serif italic text-wood">
               original tile mural
             </span>
             , and help yourself to a heaping serving of{" "}
             <span className="font-bold text-mustard">nostalgia</span>. Let us
             help you create{" "}
-            <span className="font-serif italic text-forest-dark">
+            <span className="font-serif italic text-wood">
               special memories
             </span>{" "}
             with your loved ones that will carry on through the years.
