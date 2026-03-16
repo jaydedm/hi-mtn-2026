@@ -15,13 +15,12 @@ function createClient() {
 
   // Strip sslmode from URL — we handle SSL via pool config
   if (isRemote) {
-    connectionString = connectionString.replace(/[?&]sslmode=[^&]*/g, "");
-    // Clean up leftover ? or &
-    connectionString = connectionString.replace(/\?$/, "");
+    connectionString = connectionString.replace(/[?&]sslmode=[^&]*/g, "").replace(/\?$/, "");
   }
 
   const pool = new pg.Pool({
     connectionString,
+    max: 2,
     ssl: isRemote ? { rejectUnauthorized: false } : false,
   });
   return new PrismaClient({ adapter: new PrismaPg(pool) });
