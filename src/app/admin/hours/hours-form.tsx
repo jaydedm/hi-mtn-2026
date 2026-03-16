@@ -18,6 +18,10 @@ export function HoursForm({ initial }: { initial: Row[] }) {
   const update = (i: number, patch: Partial<Row>) =>
     setRows((prev) => prev.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
 
+  const hasIncomplete = rows.some(
+    (r) => !r.isClosed && (!r.openTime || !r.closeTime)
+  );
+
   const save = async () => {
     setSaving(true);
     setMsg("");
@@ -68,9 +72,14 @@ export function HoursForm({ initial }: { initial: Row[] }) {
         </div>
       ))}
       <div className="flex items-center gap-4">
-        <Button onClick={save} disabled={saving} className="bg-forest text-cream hover:bg-forest-dark">
+        <Button onClick={save} disabled={saving || hasIncomplete} className="bg-forest text-cream hover:bg-forest-dark disabled:opacity-40">
           {saving ? "Saving…" : "Save Hours"}
         </Button>
+        {hasIncomplete && (
+          <span className="text-xs text-red-600 font-semibold">
+            All open days must have both open and close times.
+          </span>
+        )}
         {msg && <span className="text-sm font-semibold text-mustard">{msg}</span>}
       </div>
     </div>
