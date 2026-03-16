@@ -3,33 +3,15 @@
 import { useEffect, useState } from "react";
 import { toZonedTime } from "date-fns-tz";
 import { format, getDay } from "date-fns";
+import { isOpenNow, type HoursRow } from "@/lib/hours-logic";
 
 const MOUNTAIN_TZ = "America/Denver";
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-type HoursRow = {
-  dayOfWeek: number;
-  openTime: string | null;
-  closeTime: string | null;
-  isClosed: boolean;
-};
 
 function formatTime(time: string) {
   const [h, m] = time.split(":").map(Number);
   const d = new Date(2000, 0, 1, h, m);
   return format(d, "h:mm a");
-}
-
-function isOpenNow(hours: HoursRow[], mtNow: Date): boolean {
-  const day = getDay(mtNow);
-  const row = hours.find((h) => h.dayOfWeek === day);
-  if (!row || row.isClosed || !row.openTime || !row.closeTime) return false;
-
-  const currentMinutes = mtNow.getHours() * 60 + mtNow.getMinutes();
-  const [oh, om] = row.openTime.split(":").map(Number);
-  const [ch, cm] = row.closeTime.split(":").map(Number);
-
-  return currentMinutes >= oh * 60 + om && currentMinutes < ch * 60 + cm;
 }
 
 export function HoursClient({ hours }: { hours: HoursRow[] }) {
