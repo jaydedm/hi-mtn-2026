@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { isOpenNow, type HoursRow } from "@/lib/hours-logic";
+import { hasIncompleteHours } from "@/lib/hours-validation";
 
 // Helper: create a Date for a specific day/time (no TZ concerns — pure logic test)
 function makeDate(dayOfWeek: number, hours: number, minutes: number): Date {
@@ -56,5 +57,48 @@ describe("isOpenNow", () => {
       { dayOfWeek: 1, openTime: null, closeTime: null, isClosed: false },
     ];
     expect(isOpenNow(hours, makeDate(1, 12, 0))).toBe(false);
+  });
+});
+
+describe("hasIncompleteHours", () => {
+  it("returns false when all open days have both times", () => {
+    const rows: HoursRow[] = [
+      { dayOfWeek: 0, openTime: null, closeTime: null, isClosed: true },
+      { dayOfWeek: 1, openTime: "11:00", closeTime: "21:00", isClosed: false },
+    ];
+    expect(hasIncompleteHours(rows)).toBe(false);
+  });
+
+  it("returns false when all days are closed", () => {
+    const rows: HoursRow[] = [
+      { dayOfWeek: 0, openTime: null, closeTime: null, isClosed: true },
+      { dayOfWeek: 1, openTime: null, closeTime: null, isClosed: true },
+    ];
+    expect(hasIncompleteHours(rows)).toBe(false);
+  });
+
+  it("returns true when an open day is missing open time", () => {
+    const rows: HoursRow[] = [
+      { dayOfWeek: 1, openTime: "", closeTime: "21:00", isClosed: false },
+    ];
+    expect(hasIncompleteHours(rows)).toBe(true);
+  });
+
+  it("returns true when an open day is missing close time", () => {
+    const rows: HoursRow[] = [
+      { dayOfWeek: 1, openTime: "11:00", closeTime: "", isClosed: false },
+    ];
+    expect(hasIncompleteHours(rows)).toBe(true);
+  });
+
+  it("returns true when an open day has null times", () => {
+    const rows: HoursRow[] = [
+      { dayOfWeek: 1, openTime: null, closeTime: null, isClosed: false },
+    ];
+    expect(hasIncompleteHours(rows)).toBe(true);
+  });
+
+  it("returns false for empty array", () => {
+    expect(hasIncompleteHours([])).toBe(false);
   });
 });
