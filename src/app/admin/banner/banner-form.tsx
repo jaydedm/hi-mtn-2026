@@ -23,6 +23,7 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
   const [data, setData] = useState<BannerData>(baseline);
   const [saving, setSaving] = useState(false);
   const [previewed, setPreviewed] = useState(false);
+  const [showDates, setShowDates] = useState(baseline.startDate !== "" || baseline.endDate !== "");
   const [msg, setMsg] = useState("");
   const router = useRouter();
 
@@ -105,14 +106,15 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
       </div>
       <div className="flex items-center gap-3">
         <Switch
-          checked={data.startDate !== "" || data.endDate !== ""}
+          checked={showDates}
           onCheckedChange={(v) => {
+            setShowDates(v);
             if (!v) patch({ startDate: "", endDate: "" });
           }}
         />
         <Label>Schedule display dates</Label>
       </div>
-      {(data.startDate !== "" || data.endDate !== "") ? (
+      {showDates ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label>Start Date/Time</Label>
