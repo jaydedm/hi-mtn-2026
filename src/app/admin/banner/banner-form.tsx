@@ -41,10 +41,16 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
   const save = async () => {
     setSaving(true);
     setMsg("");
+    // Convert datetime-local values to full ISO strings with the admin's timezone
+    const payload = {
+      ...data,
+      startDate: data.startDate ? new Date(data.startDate).toISOString() : "",
+      endDate: data.endDate ? new Date(data.endDate).toISOString() : "",
+    };
     const res = await fetch("/api/banner", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
     setSaving(false);
     if (res.ok) {
