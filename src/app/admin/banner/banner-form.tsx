@@ -132,9 +132,9 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
           </div>
         </div>
       ) : (
-        <p className="text-xs text-muted-foreground">
-          Banner will stay active indefinitely until manually toggled off.
-        </p>
+        <span className="inline-block bg-mustard/20 text-wood text-xs font-semibold px-3 py-1.5 rounded-full">
+          No expiration — banner stays active until manually toggled off
+        </span>
       )}
       {needsEndDate && (
         <p className="text-xs text-red-600 font-semibold">
