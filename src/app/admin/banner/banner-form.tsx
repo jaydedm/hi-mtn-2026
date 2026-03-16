@@ -34,7 +34,7 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
     data.endDate !== baseline.endDate;
 
   const needsEndDate = data.startDate !== "" && data.endDate === "";
-  const canSave = hasChanges && !needsEndDate && previewed;
+  const canSave = hasChanges && !needsEndDate && (previewed || !data.isActive);
 
   const patch = (p: Partial<BannerData>) => { setData((d) => ({ ...d, ...p })); setMsg(""); setPreviewed(false); };
 
@@ -156,7 +156,7 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
         </div>
       )}
       <div className="flex items-center gap-4">
-        {hasChanges && !needsEndDate && data.bannerText && (
+        {data.isActive && hasChanges && !needsEndDate && data.bannerText && (
           <Button
             type="button"
             onClick={() => setPreviewed(true)}
