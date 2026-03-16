@@ -16,18 +16,30 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
 
+  const [error, setError] = useState("");
+
   const refresh = async () => {
     const res = await fetch("/api/menu");
     if (res.ok) setMenus(await res.json());
   };
 
   const upload = async (file: File) => {
-    if (file.type !== "application/pdf") return alert("Only PDF files are allowed.");
+    setError("");
+    if (file.type !== "application/pdf") return setError("Only PDF files are allowed.");
+    const maxSize = 4.5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+      return setError(`File is ${sizeMB} MB — maximum allowed size is 4.5 MB.`);
+    }
     setUploading(true);
     const form = new FormData();
     form.append("file", file);
-    await fetch("/api/menu", { method: "POST", body: form });
-    await refresh();
+    const res = await fetch("/api/menu", { method: "POST", body: form });
+    if (!res.ok) {
+      setError("Upload failed. Please try a smaller file.");
+    } else {
+      await refresh();
+    }
     setUploading(false);
   };
 
@@ -81,6 +93,9 @@ export function MenuManager({ initial }: { initial: Menu[] }) {
           Browse Files
           <input type="file" accept=".pdf" onChange={onFileSelect} className="hidden" />
         </label>
+        {error && (
+          <p className="mt-4 text-red-600 font-semibold text-sm">{error}</p>
+        )}
       </div>
 
       {/* Menu table */}
