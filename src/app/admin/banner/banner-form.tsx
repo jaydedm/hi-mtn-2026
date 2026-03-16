@@ -103,37 +103,39 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
         <Switch checked={data.isActive} onCheckedChange={(v) => patch({ isActive: v })} />
         <Label>{data.isActive ? "Active" : "Inactive"}</Label>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Start Date/Time <span className="text-muted-foreground font-normal">(optional)</span></Label>
-          <Input
-            type="datetime-local"
-            value={data.startDate}
-            onChange={(e) => patch({ startDate: e.target.value })}
-            placeholder="Select start date"
-            className={data.startDate ? "" : "text-muted-foreground"}
-          />
-          {!data.startDate && (
-            <p className="text-xs text-muted-foreground">📅 Tap to set a start date</p>
-          )}
-        </div>
-        <div className="space-y-2">
-          <Label>End Date/Time <span className="text-muted-foreground font-normal">(optional)</span></Label>
-          <Input
-            type="datetime-local"
-            value={data.endDate}
-            onChange={(e) => patch({ endDate: e.target.value })}
-            placeholder="Select end date"
-            className={data.endDate ? "" : "text-muted-foreground"}
-          />
-          {!data.endDate && (
-            <p className="text-xs text-muted-foreground">📅 Tap to set an end date</p>
-          )}
-        </div>
+      <div className="flex items-center gap-3">
+        <Switch
+          checked={data.startDate !== "" || data.endDate !== ""}
+          onCheckedChange={(v) => {
+            if (!v) patch({ startDate: "", endDate: "" });
+          }}
+        />
+        <Label>Schedule display dates</Label>
       </div>
-      <p className="text-xs text-muted-foreground">
-        Leave dates empty to keep the banner active indefinitely (until manually toggled off).
-      </p>
+      {(data.startDate !== "" || data.endDate !== "") ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>Start Date/Time</Label>
+            <Input
+              type="datetime-local"
+              value={data.startDate}
+              onChange={(e) => patch({ startDate: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label>End Date/Time</Label>
+            <Input
+              type="datetime-local"
+              value={data.endDate}
+              onChange={(e) => patch({ endDate: e.target.value })}
+            />
+          </div>
+        </div>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          Banner will stay active indefinitely until manually toggled off.
+        </p>
+      )}
       {needsEndDate && (
         <p className="text-xs text-red-600 font-semibold">
           An end date is required when a start date is set.
