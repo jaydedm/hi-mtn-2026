@@ -7,15 +7,22 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createClient() {
-  const connectionString =
+  let connectionString =
     process.env.DIRECT_DATABASE_URL ||
     "postgres://postgres:postgres@localhost:51214/template1";
 
+  const isRemote = !!process.env.DIRECT_DATABASE_URL;
+
+  // Strip sslmode from URL — we handle SSL via pool config
+  if (isRemote) {
+    connectionString = connectionString.replace(/[?&]sslmode=[^&]*/g, "");
+    // Clean up leftover ? or &
+    connectionString = connectionString.replace(/\?$/, "");
+  }
+
   const pool = new pg.Pool({
     connectionString,
-    ssl: process.env.DIRECT_DATABASE_URL
-      ? { rejectUnauthorized: false }
-      : false,
+    ssl: isRemote ? { rejectUnauthorized: false } : false,
   });
   return new PrismaClient({ adapter: new PrismaPg(pool) });
 }
