@@ -41,6 +41,14 @@ export default async function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning className={`${serif.variable} ${sans.variable} ${brand.variable}`}>
+        <head>
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-GE5E2TPZ76" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-GE5E2TPZ76');`,
+            }}
+          />
+        </head>
         <body className="min-h-screen flex flex-col">
           <Banner />
           <Navbar menuUrl={menuUrl} />
