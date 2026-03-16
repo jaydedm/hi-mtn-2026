@@ -119,7 +119,7 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
           <div className="space-y-2">
             <Label>Start Date/Time</Label>
             <Input
-              type="datetime-local"
+              type="datetime-local" autoComplete="off"
               value={data.startDate}
               onChange={(e) => patch({ startDate: e.target.value })}
             />
@@ -127,7 +127,7 @@ export function BannerForm({ initial }: { initial: BannerData | null }) {
           <div className="space-y-2">
             <Label>End Date/Time</Label>
             <Input
-              type="datetime-local"
+              type="datetime-local" autoComplete="off"
               value={data.endDate}
               onChange={(e) => patch({ endDate: e.target.value })}
             />
