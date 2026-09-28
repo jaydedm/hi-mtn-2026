@@ -3,7 +3,6 @@ import type { HoursRow } from "@/lib/hours-logic";
 /** Pure formatting helpers for hours; safe to import from client components. */
 
 export const DAY_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-export const DAY_LONG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export function fmtTime(t: string) {
   const [h, m] = t.split(":").map(Number);

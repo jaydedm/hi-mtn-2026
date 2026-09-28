@@ -137,12 +137,6 @@ export const MENU: MenuSection[] = [
   },
 ];
 
-export const FEATURED = {
-  burger: MENU[0].items[4], // Gonburger
-  shake: "Over 90 shake flavors",
-  scone: MENU[1].items[4],
-};
-
 export const ADDRESS = "40 N Main St, Kamas, UT 84036";
 export const DIRECTIONS_URL =
   "https://www.google.com/maps/dir/?api=1&destination=40+N+Main+St,+Kamas,+UT+84036";

@@ -1,4 +1,4 @@
-/* Shared styles for the /preview redesign prototypes. */
+/* Styles for the /preview "Drug Store" redesign. */
 
 .preview-root {
   --a-cream: #fbf3e2;
@@ -7,26 +7,7 @@
   --a-blue: #1f4e8c;
   --a-mustard: #f2b632;
   --a-ink: #2a1a12;
-
-  --b-pine: #1f3a2d;
-  --b-pine-2: #14271e;
-  --b-rust: #b5532b;
-  --b-cream: #f4ecd8;
-  --b-sky: #8fb6c9;
-  --b-ink: #16211b;
-
-  --c-red: #e2321f;
-  --c-yellow: #ffd23f;
-  --c-black: #111111;
-  --c-paper: #fff8ea;
 }
-
-@keyframes pv-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.pv-marquee { animation: pv-marquee 28s linear infinite; }
-.pv-marquee:hover { animation-play-state: paused; }
 
 @keyframes pv-flicker {
   0%, 100% { opacity: 1; }
@@ -44,15 +25,10 @@
 }
 .pv-reveal { animation: pv-fade-up 0.7s ease-out both; }
 .pv-reveal-2 { animation: pv-fade-up 0.7s 0.15s ease-out both; }
-.pv-reveal-3 { animation: pv-fade-up 0.7s 0.3s ease-out both; }
 
-/* Direction A: striped awning */
+/* Striped soda-fountain awning with scalloped bottom edge */
 .pv-awning {
-  background: repeating-linear-gradient(
-    90deg,
-    var(--a-red) 0 28px,
-    var(--a-cream) 28px 56px
-  );
+  background: repeating-linear-gradient(90deg, var(--a-red) 0 28px, var(--a-cream) 28px 56px);
 }
 .pv-awning-blue {
   background: repeating-linear-gradient(90deg, var(--a-blue) 0 28px, var(--a-cream) 28px 56px);
@@ -62,65 +38,13 @@
   mask: radial-gradient(circle at 50% 100%, transparent var(--r), #000 calc(var(--r) + 1px)) 50% 100% / calc(var(--r) * 2) calc(var(--r) * 2) repeat-x,
     linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--r)) no-repeat;
 }
-.pv-oval {
-  clip-path: ellipse(48% 48% at 50% 50%);
-}
+
+/* Scalloped-edge oval photo frame, echoing the archive prints */
 .pv-oval-frame {
   border-radius: 50%;
   box-shadow: 0 0 0 6px var(--a-cream), 0 0 0 8px var(--a-mustard), 0 14px 30px -10px rgba(0,0,0,.5);
 }
-.pv-checker {
-  background-image: linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%),
-    linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%);
-  background-size: 16px 16px;
-  background-position: 0 0, 8px 8px;
-}
-.pv-dots-price {
-  background-image: radial-gradient(circle, currentColor 1px, transparent 1.5px);
-  background-size: 8px 8px;
-  background-position: bottom;
-  background-repeat: repeat-x;
-}
-
-/* Direction B: contour lines */
-.pv-contours {
-  background-color: var(--b-pine);
-  background-image:
-    radial-gradient(ellipse 60% 40% at 20% 30%, transparent 58%, rgba(255,255,255,.06) 59%, transparent 61%),
-    radial-gradient(ellipse 60% 40% at 20% 30%, transparent 48%, rgba(255,255,255,.06) 49%, transparent 51%),
-    radial-gradient(ellipse 60% 40% at 20% 30%, transparent 38%, rgba(255,255,255,.06) 39%, transparent 41%),
-    radial-gradient(ellipse 70% 50% at 80% 80%, transparent 58%, rgba(255,255,255,.06) 59%, transparent 61%),
-    radial-gradient(ellipse 70% 50% at 80% 80%, transparent 46%, rgba(255,255,255,.06) 47%, transparent 49%),
-    radial-gradient(ellipse 70% 50% at 80% 80%, transparent 34%, rgba(255,255,255,.06) 35%, transparent 37%);
-}
-.pv-woodgrain {
-  background-color: #6b4226;
-  background-image: repeating-linear-gradient(
-    90deg,
-    rgba(0,0,0,.08) 0 2px,
-    transparent 2px 9px,
-    rgba(255,255,255,.04) 9px 11px,
-    transparent 11px 23px
-  );
-}
-.pv-trail-sign {
-  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 50%, calc(100% - 22px) 100%, 0 100%);
-}
-
-/* Direction C: hard shadows */
-.pv-hard { box-shadow: 6px 6px 0 var(--c-black); }
-.pv-hard-sm { box-shadow: 3px 3px 0 var(--c-black); }
-.pv-hard-hover { transition: transform .12s, box-shadow .12s; }
-.pv-hard-hover:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--c-black); }
-.pv-hard-hover:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--c-black); }
-.pv-halftone {
-  background-image: radial-gradient(circle, rgba(0,0,0,.18) 1.2px, transparent 1.6px);
-  background-size: 6px 6px;
-}
-.pv-sticker {
-  transform: rotate(var(--tilt, -4deg));
-}
 
 @media (prefers-reduced-motion: reduce) {
-  .pv-marquee, .pv-neon, .pv-reveal, .pv-reveal-2, .pv-reveal-3 { animation: none; }
+  .pv-neon, .pv-reveal, .pv-reveal-2 { animation: none; }
 }

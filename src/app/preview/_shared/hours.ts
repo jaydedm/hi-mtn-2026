@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import type { HoursRow } from "@/lib/hours-logic";
 
-export { groupHours, fmtTime, DAY_SHORT, DAY_LONG } from "./hours-format";
+export { groupHours, fmtTime, DAY_SHORT } from "./hours-format";
 
 /**
  * Hours used by the prototypes. Reads the real table when available and
