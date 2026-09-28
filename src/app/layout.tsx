@@ -5,6 +5,7 @@ import { Playfair_Display, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Banner } from "@/components/banner";
+import { SiteChrome } from "@/components/site-chrome";
 import { getActiveMenuUrl } from "@/lib/menu";
 
 export const dynamic = "force-dynamic";
@@ -58,9 +59,12 @@ export default async function RootLayout({
           </Script>
         </head>
         <body className="min-h-screen flex flex-col">
-          <Banner />
-          <Navbar menuUrl={menuUrl} />
+          <SiteChrome>
+            <Banner />
+            <Navbar menuUrl={menuUrl} />
+          </SiteChrome>
           <main className="flex-1">{children}</main>
+          <SiteChrome>
           <footer className="bg-forest-dark text-cream py-8 text-center text-sm">
             <a
               href="https://www.google.com/maps/dir/?api=1&destination=40+N+Main+St,+Kamas,+UT+84036"
@@ -81,6 +85,7 @@ export default async function RootLayout({
               © {new Date().getFullYear()} Hi-Mountain. All rights reserved.
             </p>
           </footer>
+          </SiteChrome>
         </body>
       </html>
     </ClerkProvider>
