@@ -9,7 +9,6 @@ A production web application for Hi-Mountain, a rustic burger restaurant in Kama
 - **Framework:** Next.js 16 (App Router), React, TypeScript
 - **Styling:** Tailwind CSS + Shadcn UI
 - **Database:** PostgreSQL via Supabase (transaction mode pooler)
-- **File Storage:** Supabase Storage (menu PDFs)
 - **Auth:** Clerk
 - **Time Handling:** date-fns + date-fns-tz (Mountain Time)
 - **Hosting:** Vercel
@@ -24,20 +23,21 @@ src/
 │   ├── admin/                      # Protected admin dashboard
 │   │   ├── hours/                  # Edit operating hours
 │   │   ├── banner/                 # Manage global banner
-│   │   └── menu/                   # Upload & manage menu PDFs
+│   │   └── menu/                   # Edit the online menu (sections, items, prices, flavors)
 │   └── api/
 │       ├── hours/route.ts          # PUT - update hours
 │       ├── banner/route.ts         # PUT - create/update banner
 │       ├── banner-status/route.ts  # GET - live banner status (polled)
-│       └── menu/route.ts           # CRUD - menu PDF management
+│       ├── menu-sections/          # CRUD - menu sections
+│       ├── menu-items/             # CRUD - menu items, extra prices, choice lists
+│       └── menu-reorder/route.ts   # PUT - reorder sections/items
 ├── components/
-│   ├── navbar.tsx                  # Global nav (Home, Hours, Menu PDF)
 │   ├── banner.tsx                  # Client-side banner (polls every 5s)
 │   └── ui/                         # Shadcn UI components
 ├── lib/
 │   ├── prisma.ts                   # Prisma client singleton (pg adapter)
-│   ├── supabase.ts                 # Supabase client (storage)
-│   ├── menu.ts                     # Active menu URL helper
+│   ├── menu-model.ts               # Menu types, formatting, validation
+│   ├── menu-data.ts                # Menu queries (server-only)
 │   └── utils.ts                    # Shadcn utilities
 └── proxy.ts                        # Clerk auth (protects /admin)
 ```
@@ -47,7 +47,7 @@ src/
 ### Public Site
 - **Home:** Hero section with photo grid background, Best of State award medals (2009–2024), SEO-targeted copy ("Best Burgers in Utah")
 - **Hours:** Weekly schedule fetched from DB, current day highlighted with gold pill badge, live "Open/Closed" indicator evaluated strictly in Mountain Time (refreshes every 30s)
-- **Menu:** Nav button opens the active menu PDF (stored in Supabase Storage) in a new tab
+- **Menu:** Web-native Lunch and After Hours menus at `/menu`, with flavor search and schema.org Menu data
 - **Banner:** Two styles — casual (gold with shimmer animation) and emergency (red pulsing alert). Polls every 5 seconds + checks on tab focus for near-instant updates
 - **Footer:** Clickable address (opens Google Maps directions), contact email link
 
@@ -55,7 +55,7 @@ src/
 - Protected by Clerk authentication
 - **Operating Hours:** Toggle open/closed per day, set open/close times (Mountain Time)
 - **Global Banner:** Casual/emergency type toggle, active/inactive switch, optional date scheduling (start/end), preview required before saving, validation (start date requires end date)
-- **Menu PDFs:** Drag-and-drop upload to Supabase Storage (4.5MB limit), table of all uploads, set one as active, delete
+- **Menu:** Edit sections, items, prices, add-ons and flavor/topping lists; choose which items show on Lunch, After Hours or both
 
 ## Design Theme
 
@@ -71,10 +71,6 @@ DIRECT_DATABASE_URL=postgres://postgres.[ref]:[password]@aws-1-us-west-1.pooler.
 
 # Database (for migrations only - use session mode, port 5432)
 DATABASE_URL=postgres://postgres.[ref]:[password]@aws-1-us-west-1.pooler.supabase.com:5432/postgres?sslmode=require
-
-# Supabase Storage
-NEXT_PUBLIC_SUPABASE_URL=https://[ref].supabase.co
-SUPABASE_SECRET_KEY=sb_secret_...
 
 # Clerk Auth
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -122,12 +118,11 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. Connect the GitHub repo to Vercel
 2. Add all environment variables (see above)
-3. Create a `menus` bucket in Supabase Storage (set to Public)
-4. Run migrations against production:
+3. Run migrations against production:
    ```bash
    DATABASE_URL="your-production-url" npx prisma migrate deploy
    ```
-5. Seed production database:
+4. Seed production database:
    ```bash
    NODE_TLS_REJECT_UNAUTHORIZED=0 DIRECT_DATABASE_URL="your-production-url" npx prisma db seed
    ```

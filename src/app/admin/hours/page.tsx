@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { PageHeader } from "../_components/ui";
 import { HoursForm } from "./hours-form";
 
 export default async function AdminHoursPage() {
@@ -6,18 +7,21 @@ export default async function AdminHoursPage() {
     orderBy: { dayOfWeek: "asc" },
   });
 
-  const serialized = hours.map((h: { dayOfWeek: number; openTime: string | null; closeTime: string | null; isClosed: boolean }) => ({
+  const serialized = hours.map((h) => ({
     dayOfWeek: h.dayOfWeek,
     openTime: h.openTime ?? "",
     closeTime: h.closeTime ?? "",
     isClosed: h.isClosed,
+    hasAfterHours: !!h.afterHoursStart,
+    afterHoursStart: h.afterHoursStart ?? "",
   }));
 
   return (
     <div>
-      <h1 className="font-brand text-3xl font-bold text-forest-dark mb-6">
-        Edit Operating Hours
-      </h1>
+      <PageHeader
+        title="Hours"
+        description="When you’re open, and when the menu switches from Dining Room to After Hours. All times are Mountain Time. The website updates as soon as you save."
+      />
       <HoursForm initial={serialized} />
     </div>
   );

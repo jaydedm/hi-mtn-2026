@@ -1,225 +1,319 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AlertTriangle, Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { BannerBar } from "@/components/banner";
+import { BANNER_LIMITS, validateBanner, type BannerInput } from "@/lib/banner-validation";
+import { Panel, SaveToast, Segmented, type SaveState } from "../_components/ui";
+import { textareaClass } from "../menu/editor-fields";
 
-type BannerData = {
-  id?: string;
-  bannerText: string;
-  bannerType: "casual" | "emergency";
-  isActive: boolean;
-  startDate: string;
-  endDate: string;
-};
+type More = "none" | "details" | "link";
 
-const EMPTY: BannerData = {
+const EMPTY: BannerInput = {
+  label: "",
   bannerText: "",
+  details: "",
+  linkUrl: "",
+  linkText: "",
   bannerType: "casual",
   isActive: false,
   startDate: "",
   endDate: "",
 };
 
-export function BannerForm({ initial }: { initial: BannerData | null }) {
-  const baseline = useMemo(() => initial ?? EMPTY, [initial]);
-  const [data, setData] = useState<BannerData>(baseline);
-  const [saving, setSaving] = useState(false);
-  const [previewed, setPreviewed] = useState(false);
-  const [showDates, setShowDates] = useState(
-    baseline.startDate !== "" || baseline.endDate !== ""
+/** ISO → value for <input type="datetime-local"> in the browser's own time zone. */
+function toLocalInput(iso: string) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+/**
+ * Banners saved before the headline redesign have one long message. Move it into Details
+ * and ask for a short headline instead, so it fits the new one-line bar.
+ */
+function fromSaved(initial: BannerInput | null): { data: BannerInput; legacy: boolean } {
+  if (!initial) return { data: EMPTY, legacy: false };
+  const data = { ...initial, startDate: toLocalInput(initial.startDate), endDate: toLocalInput(initial.endDate) };
+  if (data.bannerText.length > BANNER_LIMITS.headline && !data.details) {
+    return { data: { ...data, details: data.bannerText.slice(0, BANNER_LIMITS.details), bannerText: "" }, legacy: true };
+  }
+  return { data, legacy: false };
+}
+
+function Counter({ value, max }: { value: string; max: number }) {
+  return (
+    <span className={`tabular-nums ${value.length > max * 0.9 ? "font-semibold text-amber-700" : ""}`}>
+      {value.length}/{max}
+    </span>
   );
-  const [msg, setMsg] = useState("");
+}
+
+export function BannerForm({ initial }: { initial: BannerInput | null }) {
   const router = useRouter();
+  const start = useMemo(() => fromSaved(initial), [initial]);
+  const [data, setData] = useState<BannerInput>(start.data);
+  const [legacy, setLegacy] = useState(start.legacy);
+  const [more, setMore] = useState<More>(start.data.details ? "details" : start.data.linkUrl ? "link" : "none");
+  const [scheduled, setScheduled] = useState(start.data.startDate !== "" || start.data.endDate !== "");
+  const snapshot = JSON.stringify({ data, more, scheduled });
+  // What's on the server, in form terms. A legacy banner counts as unsaved until it's re-saved.
+  const [savedSnapshot, setSavedSnapshot] = useState(snapshot);
+  const [save, setSave] = useState<SaveState>({ kind: "idle" });
+  const dismiss = useCallback(() => setSave({ kind: "idle" }), []);
 
-  const hasChanges =
-    data.bannerText !== baseline.bannerText ||
-    data.bannerType !== baseline.bannerType ||
-    data.isActive !== baseline.isActive ||
-    data.startDate !== baseline.startDate ||
-    data.endDate !== baseline.endDate;
+  const patch = (u: Partial<BannerInput>) => setData((p) => ({ ...p, ...u }));
 
-  const needsEndDate = data.startDate !== "" && data.endDate === "";
-  const canSave = hasChanges && !needsEndDate && (previewed || !data.isActive);
-
-  const patch = (updates: Partial<BannerData>) => {
-    setData((prev) => ({ ...prev, ...updates }));
-    setMsg("");
-    setPreviewed(false);
+  // What actually gets saved: only the "more info" fields for the chosen mode, dates only when scheduled.
+  const payload: BannerInput = {
+    ...data,
+    details: more === "details" ? data.details : "",
+    linkUrl: more === "link" ? data.linkUrl : "",
+    linkText: more === "link" ? data.linkText : "",
+    startDate: scheduled && data.startDate ? new Date(data.startDate).toISOString() : "",
+    endDate: scheduled && data.endDate ? new Date(data.endDate).toISOString() : "",
   };
+  const check = validateBanner(payload as unknown as Record<string, unknown>);
+  const problem = "error" in check ? check.error : null;
+  const dirty = legacy || snapshot !== savedSnapshot;
 
-  const save = async () => {
-    setSaving(true);
-    setMsg("");
+  const status = !data.isActive
+    ? { dot: "bg-muted-foreground", text: "Off. Visitors won’t see a banner." }
+    : scheduled && data.startDate
+      ? { dot: "bg-amber-500", text: "Scheduled. It shows only between the dates below." }
+      : { dot: "bg-emerald-500", text: "On. It shows at the top of every page until you turn it off." };
 
-    const payload = {
-      ...data,
-      startDate: data.startDate ? new Date(data.startDate).toISOString() : "",
-      endDate: data.endDate ? new Date(data.endDate).toISOString() : "",
-    };
-
+  const submit = async () => {
+    setSave({ kind: "saving" });
     try {
-      const res = await fetch("/api/banner", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        const result = await res.json();
-        patch({ id: result.id });
-        setMsg("Saved!");
-        setPreviewed(true); // Keep previewed after successful save
-        router.refresh();
-      } else {
-        setMsg("Error saving.");
-      }
-    } catch {
-      setMsg("Network error. Please try again.");
-    } finally {
-      setSaving(false);
+      const res = await fetch("/api/banner", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error ?? "Couldn’t save the banner. Please try again.");
+      const next: BannerInput = { ...data, id: body.id };
+      setData(next);
+      setSavedSnapshot(JSON.stringify({ data: next, more, scheduled }));
+      setLegacy(false);
+      setSave({ kind: "saved" });
+      router.refresh();
+    } catch (e) {
+      setSave({ kind: "error", message: e instanceof Error ? e.message : "Couldn’t save the banner. Please try again." });
     }
   };
 
+  const discard = () => {
+    const saved = JSON.parse(savedSnapshot) as { data: BannerInput; more: More; scheduled: boolean };
+    setData(saved.data);
+    setMore(saved.more);
+    setScheduled(saved.scheduled);
+  };
+
   return (
-    <div className="space-y-6 bg-card border border-border rounded-lg p-6 max-w-xl">
-      {/* Banner Text */}
-      <div className="space-y-2">
-        <Label>Banner Text</Label>
-        <Input
-          value={data.bannerText}
-          onChange={(e) => patch({ bannerText: e.target.value })}
-          placeholder="e.g. Closed today due to weather"
-        />
-      </div>
-
-      {/* Banner Type */}
-      <div className="space-y-2">
-        <Label>Banner Type</Label>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => patch({ bannerType: "casual" })}
-            className={`px-4 py-2 rounded text-sm font-semibold transition-colors ${
-              data.bannerType === "casual"
-                ? "bg-mustard text-forest-dark"
-                : "bg-cream-dark text-wood hover:bg-border"
-            }`}
-          >
-            📢 Casual
-          </button>
-          <button
-            type="button"
-            onClick={() => patch({ bannerType: "emergency" })}
-            className={`px-4 py-2 rounded text-sm font-semibold transition-colors ${
-              data.bannerType === "emergency"
-                ? "bg-red-700 text-white"
-                : "bg-cream-dark text-wood hover:bg-border"
-            }`}
-          >
-            ⚠️ Emergency
-          </button>
-        </div>
-      </div>
-
-      {/* Active Toggle */}
-      <div className="flex items-center gap-3">
-        <Switch
-          checked={data.isActive}
-          onCheckedChange={(v) => patch({ isActive: v })}
-        />
-        <Label>{data.isActive ? "Active" : "Inactive"}</Label>
-      </div>
-
-      {/* Schedule Dates Toggle */}
-      <div className="flex items-center gap-3">
-        <Switch
-          checked={showDates}
-          onCheckedChange={(v) => {
-            setShowDates(v);
-            if (!v) patch({ startDate: "", endDate: "" });
-          }}
-        />
-        <Label>Schedule display dates</Label>
-      </div>
-
-      {showDates ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label>Start Date/Time</Label>
-            <Input
-              type="datetime-local"
-              autoComplete="off"
-              value={data.startDate}
-              onChange={(e) => patch({ startDate: e.target.value })}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>End Date/Time</Label>
-            <Input
-              type="datetime-local"
-              autoComplete="off"
-              value={data.endDate}
-              onChange={(e) => patch({ endDate: e.target.value })}
-            />
-          </div>
-        </div>
-      ) : (
-        <span className="inline-block bg-mustard/20 text-wood text-xs font-semibold px-3 py-1.5 rounded-full">
-          No expiration — banner stays active until manually toggled off
-        </span>
-      )}
-
-      {needsEndDate && (
-        <p className="text-xs text-red-600 font-semibold">
-          An end date is required when a start date is set.
-        </p>
-      )}
-
-      {/* Preview */}
-      {previewed && data.bannerText && (
-        <div className="space-y-2">
-          <Label className="text-xs text-muted-foreground">Preview</Label>
-          <div
-            className={
-              data.bannerType === "emergency"
-                ? "bg-red-700 text-white text-center py-3 px-4 font-bold text-base tracking-wide animate-pulse rounded-lg"
-                : "banner-casual bg-mustard text-forest-dark text-center py-2 px-4 font-semibold text-sm rounded-lg"
-            }
-          >
-            {data.bannerType === "emergency" && "⚠️ "}
-            {data.bannerText}
-          </div>
-        </div>
-      )}
-
-      {/* Actions */}
-      <div className="flex items-center gap-4">
-        {data.isActive && hasChanges && !needsEndDate && data.bannerText && (
-          <Button
-            type="button"
-            onClick={() => setPreviewed(true)}
-            disabled={previewed}
-            variant="outline"
-            className="border-forest text-forest-dark font-semibold disabled:opacity-40"
-          >
-            {previewed ? "✓ Previewed" : "Preview Banner"}
-          </Button>
-        )}
-        <Button
-          onClick={save}
-          disabled={saving || !canSave}
-          className="bg-mustard text-forest-dark font-semibold hover:bg-mustard-light disabled:opacity-40"
+    <div className="grid gap-6 lg:grid-cols-[1fr_24rem] lg:items-start">
+      <div className="space-y-6">
+        <Panel
+          title="Show the banner"
+          description={
+            <span className="inline-flex items-center gap-2">
+              <span className={`size-2 rounded-full ${status.dot}`} aria-hidden="true" />
+              {status.text}
+            </span>
+          }
+          actions={<Switch checked={data.isActive} onCheckedChange={(v) => patch({ isActive: v })} aria-label="Show the banner on the website" />}
         >
-          {saving ? "Saving..." : "Save Banner"}
-        </Button>
-        {msg && (
-          <span className="text-sm font-semibold text-mustard">{msg}</span>
-        )}
+          <p className="text-sm text-muted-foreground">Use it for closures, holiday hours, specials or anything visitors should see first.</p>
+        </Panel>
+
+        <Panel title="Style">
+          <div role="radiogroup" aria-label="Banner style" className="grid gap-3 sm:grid-cols-2">
+            {(
+              [
+                ["casual", Megaphone, "Announcement", "Dark bar with a gold label, for everyday news.", "border-ds-mustard bg-ds-mustard/10"],
+                ["emergency", AlertTriangle, "Urgent", "Red bar, for closures and anything time-critical.", "border-ds-red bg-ds-red/5"],
+              ] as const
+            ).map(([type, Icon, title, desc, on]) => (
+              <button
+                key={type}
+                type="button"
+                role="radio"
+                aria-checked={data.bannerType === type}
+                onClick={() => patch({ bannerType: type })}
+                className={`flex items-start gap-3 rounded-xl border-2 p-3 text-left transition ${data.bannerType === type ? on : "border-border hover:border-input"}`}
+              >
+                <Icon className={`mt-0.5 size-5 shrink-0 ${type === "emergency" ? "text-ds-red" : "text-amber-600"}`} aria-hidden="true" />
+                <span>
+                  <span className="block text-sm font-semibold">{title}</span>
+                  <span className="block text-xs text-muted-foreground">{desc}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </Panel>
+
+        <Panel title="Message" description="Keep the headline to one short line. Put everything else in Details.">
+          {legacy && (
+            <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+              The banner now has a short headline plus optional details. Your previous message was moved into{" "}
+              <strong>Details</strong>. Add a short headline above it, then save.
+            </p>
+          )}
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-[12rem_1fr]">
+              <label className="text-sm font-medium">
+                Label <span className="font-normal text-muted-foreground">(optional)</span>
+                <Input
+                  value={data.label}
+                  maxLength={BANNER_LIMITS.label}
+                  onChange={(e) => patch({ label: e.target.value })}
+                  placeholder={data.bannerType === "emergency" ? "Closed today" : "Summer hours"}
+                  className="mt-1 h-9"
+                />
+                <span className="mt-1 flex justify-between text-xs font-normal text-muted-foreground">
+                  <span>Small tag on the left</span>
+                  <Counter value={data.label} max={BANNER_LIMITS.label} />
+                </span>
+              </label>
+              <label className="text-sm font-medium">
+                Headline
+                <Input
+                  value={data.bannerText}
+                  maxLength={BANNER_LIMITS.headline}
+                  onChange={(e) => patch({ bannerText: e.target.value })}
+                  placeholder={data.bannerType === "emergency" ? "Snowstorm. We’ll reopen tomorrow at 11am" : "Grill open until 4, shakes & dinner until 8"}
+                  className="mt-1 h-9"
+                />
+                <span className="mt-1 flex justify-between text-xs font-normal text-muted-foreground">
+                  <span>One line on phones works best</span>
+                  <Counter value={data.bannerText} max={BANNER_LIMITS.headline} />
+                </span>
+              </label>
+            </div>
+
+            <div>
+              <p className="mb-2 text-sm font-medium">More info</p>
+              <Segmented
+                label="More info"
+                value={more}
+                onChange={setMore}
+                options={[
+                  ["none", "None"],
+                  ["details", "Details"],
+                  ["link", "Link"],
+                ]}
+              />
+              {more === "details" && (
+                <label className="mt-3 block text-sm font-medium">
+                  <span className="sr-only">Details</span>
+                  <textarea
+                    rows={4}
+                    maxLength={BANNER_LIMITS.details}
+                    value={data.details}
+                    onChange={(e) => patch({ details: e.target.value })}
+                    placeholder="The full story. Visitors tap “Details” in the banner to read it."
+                    className={textareaClass}
+                  />
+                  <span className="mt-1 flex justify-between text-xs font-normal text-muted-foreground">
+                    <span>Opens under the bar when visitors tap “Details”.</span>
+                    <Counter value={data.details} max={BANNER_LIMITS.details} />
+                  </span>
+                </label>
+              )}
+              {more === "link" && (
+                <div className="mt-3 grid gap-4 sm:grid-cols-[1fr_12rem]">
+                  <label className="text-sm font-medium">
+                    Link to
+                    <Input value={data.linkUrl} onChange={(e) => patch({ linkUrl: e.target.value })} placeholder="/hours or https://…" className="mt-1 h-9" />
+                    <span className="mt-1 block text-xs font-normal text-muted-foreground">A page on this site like /menu, or a full web address.</span>
+                  </label>
+                  <label className="text-sm font-medium">
+                    Link text
+                    <Input
+                      value={data.linkText}
+                      maxLength={BANNER_LIMITS.linkText}
+                      onChange={(e) => patch({ linkText: e.target.value })}
+                      placeholder="See hours"
+                      className="mt-1 h-9"
+                    />
+                  </label>
+                </div>
+              )}
+            </div>
+          </div>
+        </Panel>
+
+        <Panel title="When it shows">
+          <Segmented
+            label="When the banner shows"
+            value={scheduled ? "dates" : "always"}
+            onChange={(v) => {
+              setScheduled(v === "dates");
+              if (v === "always") patch({ startDate: "", endDate: "" });
+            }}
+            options={[
+              ["always", "Until I turn it off"],
+              ["dates", "Between dates"],
+            ]}
+          />
+          {scheduled && (
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <label className="text-sm font-medium">
+                Starts
+                <Input type="datetime-local" autoComplete="off" value={data.startDate} onChange={(e) => patch({ startDate: e.target.value })} className="mt-1 h-9" />
+              </label>
+              <label className="text-sm font-medium">
+                Ends
+                <Input type="datetime-local" autoComplete="off" value={data.endDate} onChange={(e) => patch({ endDate: e.target.value })} className="mt-1 h-9" />
+              </label>
+            </div>
+          )}
+        </Panel>
       </div>
+
+      <div className="space-y-4 lg:sticky lg:top-10">
+        <Panel title="Preview" description="The real banner, exactly as visitors see it. Try “Details”.">
+          <div className={`overflow-hidden rounded-lg ring-1 ring-border ${data.isActive ? "" : "opacity-40"}`}>
+            <BannerBar
+              content={{
+                label: payload.label,
+                bannerText: payload.bannerText || "Your headline goes here",
+                details: payload.details,
+                linkUrl: payload.linkUrl ? "#" : "",
+                linkText: payload.linkText,
+                bannerType: payload.bannerType,
+              }}
+              onDismiss={() => {}}
+            />
+            <div className="flex items-center justify-between bg-ds-cream px-4 py-2">
+              <span className="font-script text-xl text-ds-red">Hi-Mountain</span>
+              <span className="rounded-full bg-ds-blue px-3 py-1 text-xs font-semibold text-ds-cream">Call</span>
+            </div>
+          </div>
+          {!data.isActive && <p className="mt-2 text-xs text-muted-foreground">The banner is off, so this won’t show yet.</p>}
+        </Panel>
+
+        <div className="space-y-2 rounded-xl border border-border bg-card px-4 py-3 shadow-sm">
+          {problem && dirty && <p className="text-xs font-semibold text-red-700">{problem}</p>}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-sm text-muted-foreground">{dirty ? "Unsaved changes" : "All changes saved"}</span>
+            <div className="ml-auto flex gap-2">
+              {dirty && (
+                <Button type="button" variant="ghost" onClick={discard}>
+                  Discard
+                </Button>
+              )}
+              <Button type="button" onClick={submit} disabled={!dirty || !!problem || save.kind === "saving"}>
+                {save.kind === "saving" ? "Saving…" : "Save banner"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <SaveToast state={save} onDismiss={dismiss} />
     </div>
   );
 }

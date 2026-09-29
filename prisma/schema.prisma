@@ -11,13 +11,18 @@ model OperatingHours {
   dayOfWeek Int      @unique // 0 = Sunday, 6 = Saturday
   openTime  String?  // "HH:mm" in Mountain Time, null = closed
   closeTime String?  // "HH:mm" in Mountain Time, null = closed
+  afterHoursStart String? // "HH:mm" when the After Hours menu starts; null = no After Hours that day
   isClosed  Boolean  @default(false)
   updatedAt DateTime @updatedAt
 }
 
 model GlobalBanner {
   id         String    @id @default(cuid())
-  bannerText String
+  bannerText String // the one-line headline
+  label      String? // optional chip, e.g. "Summer hours"
+  details    String? // optional longer text, shown under "Details"
+  linkUrl    String? // optional link (used when there are no details)
+  linkText   String?
   bannerType String    @default("casual") // "casual" or "emergency"
   isActive   Boolean   @default(false)
   startDate  DateTime?
@@ -30,6 +35,96 @@ model MenuPdf {
   id        String   @id @default(cuid())
   filename  String
   url       String   @default("")
+  menuType  String   @default("lunch") // "lunch" or "after-hours"; one active per type
   isActive  Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+// ---------------------------------------------------------------------------
+// Online menu. Section → Item → (Options, Choices).
+//   Section: "The Burgers", "Shakes & Malts"…; may carry section-wide add-ons
+//            ("Add bacon +$3.00", "Make it a malt +$1.00").
+//   Item:    a priced line ("Hamburger $7.50"), a shake tier with a list of
+//            flavors ("Deluxe $7.50" + 36 choices), or an unpriced list
+//            ("Dressings"). onLunch/onAfterHours pick which menu shows it.
+//   Option:  extra price lines. isAddOn = "+$1.25" on top of the item;
+//            otherwise a replacement price ("cup $6.50", "with jalapeños $12.00").
+//   Choice:  a flavor/topping/dressing name. "*" in text marks house-made.
+// Prices are integer cents.
+// ---------------------------------------------------------------------------
+
+model MenuSection {
+  id        String       @id @default(cuid())
+  slug      String       @unique
+  title     String
+  intro     String?
+  note      String?
+  sortOrder Int          @default(0)
+  isVisible Boolean      @default(true)
+  items     MenuItem[]
+  options   MenuOption[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model MenuItem {
+  id           String       @id @default(cuid())
+  sectionId    String
+  section      MenuSection  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  name         String
+  description  String?
+  priceCents   Int?
+  choicesLabel String?      // "Flavors", "Toppings", "Dressings"; heading for the choices list
+  onLunch      Boolean      @default(true)
+  onAfterHours Boolean      @default(false)
+  isAvailable  Boolean      @default(true) // false = temporarily hidden (86'd)
+  sortOrder    Int          @default(0)
+  options      MenuOption[]
+  choices      MenuChoice[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([sectionId, sortOrder])
+}
+
+model MenuOption {
+  id         String       @id @default(cuid())
+  sectionId  String?
+  section    MenuSection? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  itemId     String?
+  item       MenuItem?    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  label      String
+  priceCents Int
+  isAddOn    Boolean      @default(true)
+  sortOrder  Int          @default(0)
+
+  @@index([sectionId])
+  @@index([itemId])
+}
+
+model MenuChoice {
+  id        String   @id @default(cuid())
+  itemId    String
+  item      MenuItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  name      String
+  /// What's in it (shake flavors): powers ingredient search and allergy lookups.
+  ingredients String[] @default([])
+  sortOrder Int      @default(0)
+
+  @@index([itemId, sortOrder])
+}
+
+/// A search word that stands for a family of ingredients, e.g. "Nuts" → almonds, pecans, walnuts…
+/// One-way: searching the group finds every member; searching a member finds only that member.
+model SearchGroup {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  /// Other words that mean the same group, e.g. "nut", "tree nuts".
+  keywords  String[] @default([])
+  /// Ingredient words in the group (matched at the start of a word, plurals ignored).
+  members   String[] @default([])
+  /// Show as a one-tap "Quick search" chip above the flavor list.
+  showChip  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  updatedAt DateTime @updatedAt
 }
