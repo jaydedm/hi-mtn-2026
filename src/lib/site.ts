@@ -1,7 +1,9 @@
 /** Static business facts shared by the public site, metadata, and JSON-LD. */
 
 export const SITE_NAME = "Hi-Mountain";
-export const SITE_URL = "https://himtnburgers.com";
+// www is the primary domain on Vercel (the bare domain redirects to it), so canonical
+// URLs, the sitemap and JSON-LD must use www too.
+export const SITE_URL = "https://www.himtnburgers.com";
 export const MOUNTAIN_TZ = "America/Denver";
 
 export const STREET = "40 N Main St";
