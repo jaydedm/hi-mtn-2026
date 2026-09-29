@@ -2,6 +2,7 @@ import "dotenv/config";
 import pg from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import { seedMenu, seedSearchGroups } from "./seed-menu";
 
 const connectionString =
   process.env.DIRECT_DATABASE_URL ||
@@ -12,13 +13,13 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 const defaultHours = [
-  { dayOfWeek: 0, openTime: null, closeTime: null, isClosed: true },
-  { dayOfWeek: 1, openTime: "11:00", closeTime: "20:00", isClosed: false },
-  { dayOfWeek: 2, openTime: "11:00", closeTime: "20:00", isClosed: false },
-  { dayOfWeek: 3, openTime: "11:00", closeTime: "20:00", isClosed: false },
-  { dayOfWeek: 4, openTime: "11:00", closeTime: "20:00", isClosed: false },
-  { dayOfWeek: 5, openTime: "11:00", closeTime: "21:00", isClosed: false },
-  { dayOfWeek: 6, openTime: "11:00", closeTime: "21:00", isClosed: false },
+  { dayOfWeek: 0, openTime: null, closeTime: null, afterHoursStart: null, isClosed: true },
+  { dayOfWeek: 1, openTime: "11:00", closeTime: "20:00", afterHoursStart: "16:00", isClosed: false },
+  { dayOfWeek: 2, openTime: "11:00", closeTime: "20:00", afterHoursStart: "16:00", isClosed: false },
+  { dayOfWeek: 3, openTime: "11:00", closeTime: "20:00", afterHoursStart: "16:00", isClosed: false },
+  { dayOfWeek: 4, openTime: "11:00", closeTime: "20:00", afterHoursStart: "16:00", isClosed: false },
+  { dayOfWeek: 5, openTime: "11:00", closeTime: "21:00", afterHoursStart: "16:00", isClosed: false },
+  { dayOfWeek: 6, openTime: "11:00", closeTime: "21:00", afterHoursStart: "16:00", isClosed: false },
 ];
 
 async function main() {
@@ -30,6 +31,8 @@ async function main() {
     });
   }
   console.log("Seeded operating hours");
+  console.log((await seedMenu(prisma)) ? "Seeded online menu" : "Online menu already present; left unchanged");
+  console.log((await seedSearchGroups(prisma)) ? "Seeded search groups" : "Search groups already present; left unchanged");
 }
 
 main()

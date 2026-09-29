@@ -7,6 +7,8 @@ export type HoursRow = {
   openTime: string | null;
   closeTime: string | null;
   isClosed: boolean;
+  /** "HH:mm" when the After Hours menu starts; null/undefined = no After Hours that day. */
+  afterHoursStart?: string | null;
 };
 
 export function isOpenNow(hours: HoursRow[], mtNow: Date): boolean {

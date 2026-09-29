@@ -1,0 +1,48 @@
+/* Public site "Drug Store" decorations. Palette lives in globals.css (--color-ds-*). */
+
+@keyframes ds-flicker {
+  0%, 92%, 94%, 98%, 100% { opacity: 1; }
+  93% { opacity: 0.55; }
+  97% { opacity: 0.7; }
+}
+.ds-neon { animation: ds-flicker 6s infinite; }
+
+@keyframes ds-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ds-reveal { animation: ds-fade-up 0.7s ease-out both; }
+.ds-reveal-2 { animation: ds-fade-up 0.7s 0.15s ease-out both; }
+
+/* Striped soda-fountain awning with scalloped bottom edge */
+.ds-awning {
+  background: repeating-linear-gradient(90deg, var(--color-ds-red) 0 28px, #fff 28px 56px);
+}
+.ds-awning-blue {
+  background: repeating-linear-gradient(90deg, var(--color-ds-blue) 0 28px, #fff 28px 56px);
+}
+.ds-scallop {
+  --r: 14px;
+  mask: radial-gradient(circle at 50% 100%, transparent var(--r), #000 calc(var(--r) + 1px)) 50% 100% / calc(var(--r) * 2) calc(var(--r) * 2) repeat-x,
+    linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--r)) no-repeat;
+}
+
+/* Oval photo frame echoing the archive prints */
+.ds-oval-frame {
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--color-ds-cream), 0 0 0 8px var(--color-ds-mustard), 0 14px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-neon, .ds-reveal, .ds-reveal-2 { animation: none; }
+}
+
+/* Horizontal scrollers that hide their scrollbar (swipe, trackpad and arrow buttons still work). */
+.ds-no-scrollbar { scrollbar-width: none; }
+.ds-no-scrollbar::-webkit-scrollbar { display: none; }
+
+@keyframes ds-banner-in {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
