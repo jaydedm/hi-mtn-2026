@@ -6,6 +6,8 @@ import { OpenBadge } from "@/components/site/open-badge";
 import { ScheduleList } from "@/components/site/schedule-list";
 import { StoryTimeline, type StoryEntry } from "@/components/site/story-timeline";
 import { groupSchedule } from "@/lib/menu-schedule";
+import { buildFaqs, faqJsonLd } from "@/lib/faq";
+import { jsonLdString } from "@/lib/restaurant-jsonld";
 import { getHours } from "@/lib/hours";
 import { getOnlineMenus } from "@/lib/menu-data";
 import {
@@ -48,6 +50,7 @@ const STORY: StoryEntry[] = [
 export default async function HomePage() {
   const [hours, online] = await Promise.all([getHours(), getOnlineMenus()]);
   const grouped = groupSchedule(hours);
+  const faqs = buildFaqs(grouped);
 
   return (
     <>
@@ -219,6 +222,36 @@ export default async function HomePage() {
           </p>
 
           <StoryTimeline entries={STORY} />
+        </div>
+      </section>
+
+      {/* Area + FAQ: answers the "near Park City / Heber / Uintas" questions people search for */}
+      <section aria-labelledby="faq-heading" className="bg-ds-cream">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(faqJsonLd(faqs)) }} />
+        <div className="mx-auto max-w-3xl px-5 py-20">
+          <h2 id="faq-heading" className="font-script text-6xl text-ds-red text-center">
+            Good to Know
+          </h2>
+          <p className="text-center italic text-ds-ink/75 mt-3 max-w-2xl mx-auto">
+            Kamas sits at the gateway to the Uinta Mountains, a quick drive from Park City and
+            Heber City. Here&rsquo;s what folks usually ask before they visit.
+          </p>
+          <div className="mt-10 divide-y-2 divide-dotted divide-ds-ink/15 rounded-3xl bg-white px-6 shadow-lg ring-1 ring-ds-ink/10 sm:px-8">
+            {faqs.map((f) => (
+              <details key={f.q} className="group py-5">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-slab text-lg text-ds-ink marker:hidden [&::-webkit-details-marker]:hidden">
+                  <h3>{f.q}</h3>
+                  <span
+                    aria-hidden="true"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ds-cream-2 text-ds-red transition group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 leading-relaxed text-ds-ink/80">{f.a}</p>
+              </details>
+            ))}
+          </div>
         </div>
       </section>
 

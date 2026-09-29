@@ -131,7 +131,7 @@ describe("restaurantJsonLd", () => {
   it("lists only menus with online items, linking to their /menu tab", () => {
     const ld = restaurantJsonLd(weekdays, { lunch: false, "after-hours": true });
     expect(ld.hasMenu).toEqual([
-      { "@type": "Menu", name: MENU_INFO["after-hours"].title, url: "https://himtnburgers.com/menu?menu=after-hours" },
+      { "@type": "Menu", name: MENU_INFO["after-hours"].title, url: "https://www.himtnburgers.com/menu?menu=after-hours" },
     ]);
   });
 
