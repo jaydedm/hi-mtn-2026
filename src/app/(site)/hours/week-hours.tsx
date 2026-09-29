@@ -24,7 +24,7 @@ export function WeekHours({ hours }: { hours: HoursRow[] }) {
             <div className="flex items-center justify-between gap-4 font-slab">
               <span className="flex items-center gap-3">
                 {DAY_LONG[d]}
-                {isToday && <span className="rounded-full bg-ds-mustard px-3 py-0.5 text-xs uppercase tracking-widest">Today</span>}
+                {isToday && <span className="ds-hut bg-ds-mustard px-3 pb-0.5 text-xs uppercase tracking-widest">Today</span>}
               </span>
               <span className={label === "Closed" ? "text-ds-ink/50" : ""}>{label}</span>
             </div>

@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { DIRECTIONS_URL, PHONE_HREF } from "@/lib/site";
 
 const item = "flex flex-col items-center gap-1 py-2.5 font-slab text-xs text-ds-ink";
 
-/** Sticky bottom bar on phones: directions, call, menu. */
+/** Sticky bottom bar on phones: directions, call, menu (or home, when already on the menu). */
 export function MobileActionBar() {
+  const onMenu = usePathname() === "/menu";
   return (
     <nav
       aria-label="Quick actions"
@@ -24,11 +28,11 @@ export function MobileActionBar() {
         </svg>
         Call
       </a>
-      <Link href="/menu" className={`${item} bg-ds-red text-ds-cream`}>
+      <Link href={onMenu ? "/" : "/menu"} className={`${item} bg-ds-red text-ds-cream`}>
         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-          <path d="M4 6h16M4 12h16M4 18h10" />
+          <path d={onMenu ? "M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10" : "M4 6h16M4 12h16M4 18h10"} />
         </svg>
-        Menu
+        {onMenu ? "Home" : "Menu"}
       </Link>
     </nav>
   );

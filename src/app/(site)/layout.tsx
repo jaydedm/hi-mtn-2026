@@ -19,8 +19,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const [hours, online] = await Promise.all([getHours(), getOnlineMenus()]);
 
   return (
+    // overflow-x-clip: anything wider than the phone would widen the layout viewport and push the
+    // fixed bottom bar below the screen. "clip" (not "hidden") keeps the sticky header working.
     <div
-      className={`${script.variable} ${slab.variable} ${body.variable} min-h-screen flex flex-col bg-ds-cream text-ds-ink font-body pb-16 md:pb-0`}
+      className={`${script.variable} ${slab.variable} ${body.variable} min-h-screen flex flex-col overflow-x-clip bg-ds-cream text-ds-ink font-body pb-16 md:pb-0`}
     >
       <script
         type="application/ld+json"

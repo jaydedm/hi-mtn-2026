@@ -65,7 +65,7 @@ export function MenuView({
   if (types.length === 0) return null;
 
   return (
-    <div>
+    <div data-menu={active} className="ds-menu-theme">
       <div ref={bar} className="sticky top-[var(--site-header-h,0px)] z-30 -mx-5 bg-ds-cream/95 px-5 pt-3 pb-2 backdrop-blur border-b-2 border-dotted border-ds-ink/20">
         <div role="tablist" aria-label="Menus" className="mx-auto flex max-w-xl gap-1 rounded-full bg-ds-cream-2 p-1 shadow-md ring-1 ring-ds-ink/10">
           {types.map((t, i) => {
@@ -108,7 +108,7 @@ export function MenuView({
 
       {types.map((t) => (
         <div key={t} role="tabpanel" id={`panel-${t}`} aria-labelledby={`tab-${t}`} hidden={active !== t} tabIndex={0} className="outline-none">
-          <p className="pt-8 text-center font-script text-4xl text-ds-red">{MENU_INFO[t].title}</p>
+          <p className="ds-menu-title pt-8 text-center font-script text-4xl">{MENU_INFO[t].title}</p>
           <p className="mt-1 text-center italic text-ds-ink/75">
             {MENU_INFO[t].blurb}
             {windows[t] && <span className="block font-slab not-italic text-xs uppercase tracking-[0.3em] text-ds-blue mt-2">{windows[t]}</span>}

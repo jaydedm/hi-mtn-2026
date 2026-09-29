@@ -149,3 +149,35 @@
   from { transform: scale(1); opacity: 0.75; }
   to { transform: scale(1.9); opacity: 0; }
 }
+
+/* Old-timey "hut" label: a flat-bottomed tag with a peaked roof. Used for static labels
+   (add-ons, "Today", "Now serving") so they don't read as clickable pills, which are
+   reserved for buttons and search chips. */
+.ds-hut {
+  --roof: 0.45em;
+  display: inline-block;
+  padding-top: calc(var(--roof) + 0.1em);
+  clip-path: polygon(0 var(--roof), 50% 0, 100% var(--roof), 100% 100%, 0 100%);
+}
+
+/* Per-menu accent colors on /menu: red for the Dining Room, neon navy for After Hours.
+   Menu components use them via text-(--m-accent), bg-(--m-accent), etc. */
+.ds-menu-theme {
+  --m-accent: var(--color-ds-red);
+  --m-on-accent: #fff;
+  --m-hit: color-mix(in srgb, var(--color-ds-mustard) 40%, transparent);
+  --m-title: var(--color-ds-red);
+}
+.ds-menu-theme[data-menu="after-hours"] {
+  --m-accent: #1f4e8c;
+  --m-on-accent: #bfeeff;
+  --m-hit: rgb(92 208 255 / 0.22);
+  --m-title: #1f4e8c;
+}
+.ds-menu-title {
+  color: var(--m-title);
+  transition: color 0.3s, text-shadow 0.3s;
+}
+.ds-menu-theme[data-menu="after-hours"] .ds-menu-title {
+  text-shadow: 0 0 18px rgb(92 208 255 / 0.55);
+}

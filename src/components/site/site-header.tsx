@@ -14,6 +14,9 @@ const NAV = [
   { href: "/#story", label: "Since 1918" },
 ];
 
+// On the menu page, the "Menu" link becomes a way back home.
+const HOME = { href: "/", label: "Home" };
+
 export function SiteHeader({ hours }: { hours: HoursRow[] }) {
   const pathname = usePathname();
   const ref = useRef<HTMLElement>(null);
@@ -40,7 +43,7 @@ export function SiteHeader({ hours }: { hours: HoursRow[] }) {
           <OpenBadge hours={hours} className="font-slab text-sm" />
         </div>
         <nav aria-label="Primary" className="flex items-center gap-5 font-slab text-sm">
-          {NAV.map((l) => (
+          {NAV.map((n) => (pathname === "/menu" && n.href === "/menu" ? HOME : n)).map((l) => (
             <Link
               key={l.href}
               href={l.href}
