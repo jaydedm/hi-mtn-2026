@@ -23,7 +23,7 @@ export default async function HoursPage() {
       </p>
 
       <div className="mt-8 flex justify-center">
-        <div className="rounded-full bg-white px-6 py-3 shadow-md ring-1 ring-ds-ink/10">
+        <div className="rounded-xl bg-white px-6 py-3 shadow-md ring-1 ring-ds-ink/10">
           <OpenBadge
             hours={hours}
             className="font-slab text-lg text-ds-ink"

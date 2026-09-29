@@ -127,7 +127,7 @@ export default async function HomePage() {
                 sizes="(min-width: 768px) 112px, 88px"
                 className="h-22 w-22 rounded-full shadow-xl ring-4 ring-ds-cream md:h-28 md:w-28"
               />
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-ds-red px-2.5 py-0.5 font-slab text-xs text-white shadow-md ring-2 ring-ds-cream md:text-sm">
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap ds-hut bg-ds-red px-2.5 pb-0.5 font-slab text-xs text-white md:text-sm">
                 {BEST_OF_STATE_COUNT}× winner
               </span>
             </div>
@@ -144,7 +144,7 @@ export default async function HomePage() {
               <h2 id="today-heading" className="font-slab text-2xl text-ds-ink">
                 Hours
               </h2>
-              <div className="rounded-full bg-ds-cream px-5 py-2 ring-1 ring-ds-ink/10">
+              <div className="rounded-lg bg-ds-cream px-5 py-2 ring-1 ring-ds-ink/10">
                 <OpenBadge
                   hours={hours}
                   className="font-slab text-base text-ds-ink"

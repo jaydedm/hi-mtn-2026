@@ -141,8 +141,8 @@ export function SectionChips({ sections, prefix, label }: { sections: MenuSectio
                   aria-current={on ? "location" : undefined}
                   className={`block whitespace-nowrap rounded-full border px-3 py-1 font-slab text-xs uppercase tracking-wider transition-colors duration-300 ${
                     on
-                      ? "border-ds-red bg-ds-red text-white shadow-sm"
-                      : "border-ds-ink/20 bg-white/60 hover:border-ds-red hover:text-ds-red"
+                      ? "border-(--m-accent) bg-(--m-accent) text-(--m-on-accent) shadow-sm"
+                      : "border-ds-ink/20 bg-white/60 hover:border-(--m-accent) hover:text-(--m-accent)"
                   }`}
                 >
                   {s.title}
@@ -161,7 +161,7 @@ export function SectionChips({ sections, prefix, label }: { sections: MenuSectio
             aria-label={side === "start" ? "Show previous sections" : "Show more sections"}
             className={`absolute top-1/2 -translate-y-1/2 ${
               side === "start" ? "left-0" : "right-0"
-            } flex h-7 w-7 items-center justify-center rounded-full bg-white text-ds-ink shadow-md ring-1 ring-ds-ink/15 transition hover:text-ds-red`}
+            } flex h-7 w-7 items-center justify-center rounded-full bg-white text-ds-ink shadow-md ring-1 ring-ds-ink/15 transition hover:text-(--m-accent)`}
           >
             <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" aria-hidden="true">
               <path d={side === "start" ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} />

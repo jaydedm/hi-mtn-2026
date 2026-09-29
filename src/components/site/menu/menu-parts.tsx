@@ -25,7 +25,7 @@ export function HouseMade({ text }: { text: string }) {
       {houseMadeRuns(text).map((r, i) =>
         r.houseMade ? (
           <span key={i} className="whitespace-nowrap">
-            <span className="mr-0.5 inline-block -translate-y-px text-ds-red not-italic" title="House-made">
+            <span className="mr-0.5 inline-block -translate-y-px text-(--m-accent) not-italic" title="House-made">
               <HouseIcon />
               <span className="sr-only">(house-made) </span>
             </span>
@@ -132,8 +132,8 @@ export function ChoiceList({ item, highlight }: { item: MenuItemDto; highlight?:
           return (
             <li
               key={c.id}
-              className={`rounded-full border px-2.5 py-0.5 text-sm italic transition ${
-                dim ? "border-transparent opacity-25" : highlight ? "border-ds-red bg-ds-mustard/40" : "border-ds-ink/15 bg-ds-cream"
+              className={`rounded-sm border px-2 py-0.5 text-sm italic transition ${
+                dim ? "border-transparent opacity-25" : highlight ? "border-(--m-accent) bg-(--m-hit)" : "border-ds-ink/15 bg-ds-cream"
               }`}
             >
               <HouseMade text={c.name} />
@@ -159,7 +159,7 @@ export function SectionHeader({ section, headingId }: { section: MenuSectionDto;
       {section.options.length > 0 && (
         <p className="mt-3 flex flex-wrap justify-center gap-2">
           {section.options.map((o) => (
-            <span key={o.id} className="rounded-full bg-ds-mustard/50 px-3 py-0.5 font-slab text-sm">
+            <span key={o.id} className="ds-hut bg-ds-mustard/60 px-3 pb-0.5 font-slab text-sm">
               {o.label} <span aria-hidden="true">{optionPriceLabel(o)}</span>
               <span className="sr-only">
                 {o.isAddOn ? "plus " : ""}${formatPrice(o.priceCents)}

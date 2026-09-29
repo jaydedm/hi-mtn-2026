@@ -32,7 +32,7 @@ export function MenuCards({ hours, online }: { hours: HoursRow[]; online: Partia
             } ${now ? "md:-translate-y-1" : ""}`}
           >
             {now && (
-              <span className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-ds-mustard px-4 py-1 font-slab text-xs uppercase tracking-widest text-ds-ink shadow">
+              <span className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap ds-hut bg-ds-mustard px-4 pb-1 font-slab text-xs uppercase tracking-widest text-ds-ink">
                 Now serving
               </span>
             )}

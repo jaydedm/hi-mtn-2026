@@ -87,7 +87,7 @@ function SearchableLists({ section, groups }: { section: MenuSectionDto; groups:
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Try “cheesecake”, “coconut” or “nuts”"
-          className="w-full rounded-full border-2 border-ds-ink/20 bg-white px-5 py-2.5 text-base outline-none focus-visible:border-ds-red focus-visible:ring-4 focus-visible:ring-ds-red/20"
+          className="w-full rounded-full border-2 border-ds-ink/20 bg-white px-5 py-2.5 text-base outline-none focus-visible:border-(--m-accent) focus-visible:ring-4 focus-visible:ring-(--m-accent)/20"
         />
         <p aria-live="polite" className="mt-2 min-h-5 text-center text-sm italic text-ds-ink/70">
           {summary}
@@ -105,7 +105,7 @@ function SearchableLists({ section, groups }: { section: MenuSectionDto; groups:
                     aria-pressed={on}
                     onClick={() => setQ(on ? "" : g.name)}
                     className={`rounded-full border px-3 py-1 font-slab text-xs uppercase tracking-wider transition ${
-                      on ? "border-ds-red bg-ds-red text-white" : "border-ds-ink/20 bg-white/70 hover:border-ds-red hover:text-ds-red"
+                      on ? "border-(--m-accent) bg-(--m-accent) text-(--m-on-accent)" : "border-ds-ink/20 bg-white/70 hover:border-(--m-accent) hover:text-(--m-accent)"
                     }`}
                   >
                     {g.name}
