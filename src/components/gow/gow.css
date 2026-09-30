@@ -138,7 +138,7 @@
   top: 42%;
   display: flex;
   align-items: center;
-  gap: 38px;
+  gap: 20px;
   opacity: 0;
   transform: translate(calc(-50% + var(--look-x)), calc(-50% + var(--look-y)));
   transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -153,35 +153,36 @@
   100% { opacity: 1; }
 }
 .gow-eye {
-  width: 15px;
-  height: 9px;
+  width: 9px;
+  height: 5px;
   border-radius: 50%;
   background: radial-gradient(ellipse at 50% 50%, #ff2a12 0%, #c40000 50%, transparent 100%);
-  box-shadow: 0 0 14px 5px rgb(255 30 10 / 0.55), 0 0 48px 18px rgb(255 0 0 / 0.22);
-  /* Soft focus: a glow seen through haze, not a crisp shape */
-  filter: blur(2.5px);
+  box-shadow: 0 0 8px 3px rgb(255 30 10 / 0.5), 0 0 28px 10px rgb(255 0 0 / 0.18);
+  /* Soft focus: a distant glow seen through haze, not a crisp shape */
+  filter: blur(1.6px);
 }
-/* Timed from when the eyes phase starts: after a beat of darkness the eyes open (a slit, a
-   pause, then wide), stare, first blink at ~13s, then every 10s. */
+/* Timed from when the eyes phase starts: after a long beat of darkness the eyes open (a slit,
+   a pause, then wide), stare, first blink at ~13.7s, then every 10s. Small and soft, as if the
+   thing is standing far off in the dark. */
 .gow-eye { height: 0; }
 :root[data-gow="eyes"] .gow-eye {
-  animation: gow-open 1.3s 0.5s ease-out both, gow-blink 10s 3.5s infinite, gow-glow 3.2s ease-in-out infinite;
+  animation: gow-open 1.3s 1.2s ease-out both, gow-blink 10s 4.2s infinite, gow-glow 3.2s ease-in-out infinite;
 }
 @keyframes gow-open {
   0% { height: 0; }
-  35% { height: 2px; }
-  60% { height: 2px; }
-  100% { height: 9px; }
+  35% { height: 1px; }
+  60% { height: 1px; }
+  100% { height: 5px; }
 }
 .gow-eye:first-child { transform: rotate(8deg); }
 .gow-eye:last-child { transform: rotate(-8deg); }
 @keyframes gow-blink {
-  0%, 94%, 100% { height: 9px; }
-  96%, 97% { height: 1px; }
+  0%, 94%, 100% { height: 5px; }
+  96%, 97% { height: 0.5px; }
 }
 @keyframes gow-glow {
-  0%, 100% { filter: blur(2.5px) brightness(0.9); }
-  50% { filter: blur(3.5px) brightness(1.3); }
+  0%, 100% { filter: blur(1.6px) brightness(0.9); }
+  50% { filter: blur(2.2px) brightness(1.3); }
 }
 
 .gow-escape {
@@ -207,6 +208,6 @@
   :root[data-gow="glitch"] .ds-site { filter: saturate(0.4) brightness(0.6); transition: filter 2s; }
   .gow-tear, .gow-scanlines { display: none; }
   .gow-grain, .gow-haze, :root[data-gow] .gow-eye { animation: none; }
-  :root[data-gow="eyes"] .gow-eye { height: 9px; }
+  :root[data-gow="eyes"] .gow-eye { height: 5px; }
   :root[data-gow="eyes"] .gow-eyes { animation: gow-eyes-in 2s ease-in forwards; }
 }

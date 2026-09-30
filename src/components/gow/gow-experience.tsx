@@ -13,7 +13,7 @@ const TIMELINE: [Phase, number][] = [
   ["unease", 1100],
   ["glitch", 1100],
   ["shatter", 1100],
-  ["dark", 700],
+  ["dark", 1500],
   ["eyes", 0],
 ];
 
@@ -107,8 +107,8 @@ export function GowExperience() {
       if (!el) return;
       const dx = (e.clientX / window.innerWidth - 0.5) * 2;
       const dy = (e.clientY / window.innerHeight - 0.5) * 2;
-      el.style.setProperty("--look-x", `${dx * 6}px`);
-      el.style.setProperty("--look-y", `${dy * 4}px`);
+      el.style.setProperty("--look-x", `${dx * 3}px`);
+      el.style.setProperty("--look-y", `${dy * 2}px`);
     };
     window.addEventListener("pointermove", move);
     return () => window.removeEventListener("pointermove", move);
