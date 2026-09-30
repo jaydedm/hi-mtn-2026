@@ -1,0 +1,184 @@
+/* /gow easter egg. Phases are set on <html data-gow="…"> by gow-experience.tsx. */
+
+.gow-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  background: transparent;
+  transition: background-color 0.4s;
+}
+:root[data-gow="shatter"] .gow-stage,
+:root[data-gow="dark"] .gow-stage,
+:root[data-gow="eyes"] .gow-stage {
+  background: #000;
+}
+
+/* 1. Unease: the page twitches now and then, and loses a little colour. */
+:root[data-gow="unease"] .ds-site {
+  animation: gow-twitch 1.1s steps(1, end) infinite;
+  filter: saturate(0.75) contrast(1.05);
+  transition: filter 1s;
+}
+@keyframes gow-twitch {
+  0%, 31%, 34%, 72%, 74%, 100% { transform: none; }
+  32% { transform: translate(2px, -1px); }
+  33% { transform: translate(-3px, 1px) skewX(0.6deg); }
+  73% { transform: translateX(4px); }
+}
+
+/* 2. Glitch: colour split, horizontal slicing, skew bursts. Movement only (no bright flashes). */
+:root[data-gow="glitch"] .ds-site {
+  animation: gow-glitch 0.7s steps(1, end) infinite;
+  filter: saturate(0.5) contrast(1.25) drop-shadow(4px 0 0 rgb(255 0 40 / 0.7)) drop-shadow(-4px 0 0 rgb(0 220 255 / 0.55));
+}
+@keyframes gow-glitch {
+  0% { transform: none; clip-path: inset(0); }
+  8% { transform: translate(-12px, 0) skewX(-4deg); clip-path: inset(12% 0 64% 0); }
+  14% { transform: translate(9px, 3px); clip-path: inset(0); }
+  22% { transform: translate(0, -6px) skewX(3deg); clip-path: inset(48% 0 22% 0); }
+  30% { transform: none; clip-path: inset(0); }
+  46% { transform: translate(18px, 0); clip-path: inset(0 0 78% 0); }
+  52% { transform: translate(-6px, 2px) scaleY(1.02); clip-path: inset(0); }
+  67% { transform: translate(3px, 0) skewX(-8deg); clip-path: inset(70% 0 6% 0); }
+  74% { transform: none; clip-path: inset(0); }
+  88% { transform: translate(-20px, -2px); clip-path: inset(30% 0 40% 0); }
+  94% { transform: none; clip-path: inset(0); }
+}
+.gow-scanlines {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: repeating-linear-gradient(0deg, rgb(0 0 0 / 0.35) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+  transition: opacity 0.6s;
+}
+:root[data-gow="glitch"] .gow-scanlines,
+:root[data-gow="shatter"] .gow-scanlines { opacity: 1; }
+
+/* 3. Shatter: the real page hides; clipped bands of a copy jump sideways with a colour split
+   and cut out one by one (hard cuts, no fades), leaving black. */
+:root[data-gow="shatter"] .ds-site,
+:root[data-gow="dark"] .ds-site,
+:root[data-gow="eyes"] .ds-site {
+  visibility: hidden;
+}
+/* One filter over all the bands (cheaper than one per band): colour split + washed-out contrast. */
+.gow-tear {
+  position: absolute;
+  inset: 0;
+  filter: saturate(0.4) contrast(1.3) drop-shadow(5px 0 0 rgb(255 0 40 / 0.75)) drop-shadow(-5px 0 0 rgb(0 220 255 / 0.6));
+}
+.gow-piece {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  animation: gow-jump var(--jitter) steps(1, end) infinite, gow-cut 0.01s var(--gone) forwards;
+  will-change: transform;
+}
+:root[data-gow] .gow-piece > .ds-site { visibility: visible; animation: none; filter: none; }
+@keyframes gow-jump {
+  0% { transform: none; }
+  25% { transform: translateX(var(--dx1)); }
+  50% { transform: translateX(calc(var(--dx2) * 0.3)); }
+  75% { transform: translateX(var(--dx2)); }
+}
+@keyframes gow-cut { to { visibility: hidden; } }
+
+/* 4. Darkness, with film grain and a vignette. */
+.gow-dark {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: radial-gradient(ellipse at 50% 45%, #0b0606 0%, #000 70%);
+  transition: opacity 1.5s;
+}
+:root[data-gow="dark"] .gow-dark,
+:root[data-gow="eyes"] .gow-dark { opacity: 1; }
+.gow-grain {
+  position: absolute;
+  inset: -50%;
+  opacity: 0.09;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: gow-grain 0.9s steps(6) infinite;
+}
+@keyframes gow-grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-6%, -2%); }
+  80% { transform: translate(5%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* 5. The eyes. */
+.gow-eyes {
+  --look-x: 0px;
+  --look-y: 0px;
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  display: flex;
+  align-items: center;
+  gap: 38px;
+  opacity: 0;
+  transform: translate(calc(-50% + var(--look-x)), calc(-50% + var(--look-y)));
+  transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+:root[data-gow="eyes"] .gow-eyes {
+  animation: gow-eyes-in 2s 0.2s ease-in forwards;
+}
+@keyframes gow-eyes-in {
+  0% { opacity: 0; }
+  30% { opacity: 0.25; }
+  38% { opacity: 0.05; }
+  100% { opacity: 1; }
+}
+.gow-eye {
+  width: 15px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, #ff2a12 0%, #d40000 55%, #7a0000 85%, transparent 100%);
+  box-shadow: 0 0 10px 3px rgb(255 30 10 / 0.75), 0 0 36px 12px rgb(255 0 0 / 0.28);
+}
+/* Timed from when the eyes phase starts: they fade in (~2s), stare, and first blink at ~7.5s,
+   then every 8s. */
+:root[data-gow="eyes"] .gow-eye {
+  animation: gow-blink 8s infinite, gow-glow 3.2s ease-in-out infinite;
+}
+.gow-eye:first-child { transform: rotate(8deg); }
+.gow-eye:last-child { transform: rotate(-8deg); }
+@keyframes gow-blink {
+  0%, 94%, 100% { height: 9px; }
+  96%, 97% { height: 1px; }
+}
+@keyframes gow-glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.35); }
+}
+
+.gow-escape {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  font: 12px/1 ui-monospace, monospace;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.22);
+  opacity: 0;
+  animation: gow-escape-in 1.5s 6s forwards;
+}
+.gow-escape:hover, .gow-escape:focus-visible { color: rgb(255 255 255 / 0.6); }
+@keyframes gow-escape-in { to { opacity: 1; } }
+
+/* Reduced motion: no twitching, glitching, tearing or blinking. The page fades to black and the
+   eyes fade in. */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-gow] .ds-site { animation: none !important; transform: none !important; clip-path: none !important; }
+  :root[data-gow="glitch"] .ds-site { filter: saturate(0.4) brightness(0.6); transition: filter 2s; }
+  .gow-tear, .gow-scanlines { display: none; }
+  .gow-grain, :root[data-gow] .gow-eye { animation: none; }
+  :root[data-gow="eyes"] .gow-eyes { animation: gow-eyes-in 3s ease-in forwards; }
+}
