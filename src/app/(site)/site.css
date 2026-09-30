@@ -1,4 +1,4 @@
-/* Public site "Drug Store" decorations. Palette lives in globals.css (--color-ds-*). */
+/* Public site decorations. Colors come from the theme (src/lib/theme.ts, --ds-* variables). */
 
 @keyframes ds-flicker {
   0%, 92%, 94%, 98%, 100% { opacity: 1; }
@@ -7,6 +7,10 @@
 }
 .ds-neon { animation: ds-flicker 6s infinite; }
 
+/* After Hours glow in the theme's night glow color */
+.ds-glow-box { box-shadow: 0 0 16px color-mix(in srgb, var(--ds-glow) 40%, transparent); }
+.ds-glow-text { filter: drop-shadow(0 0 12px color-mix(in srgb, var(--ds-glow) 70%, transparent)); }
+
 @keyframes ds-fade-up {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
@@ -14,23 +18,56 @@
 .ds-reveal { animation: ds-fade-up 0.7s ease-out both; }
 .ds-reveal-2 { animation: ds-fade-up 0.7s 0.15s ease-out both; }
 
-/* Striped soda-fountain awning with scalloped bottom edge */
-.ds-awning {
-  background: repeating-linear-gradient(90deg, var(--color-ds-red) 0 28px, #fff 28px 56px);
+/* Decorative band under the header / at the bottom of the hero. The style is picked with
+   data-edge on <html> (see EDGES in src/lib/theme.ts); colors follow the theme. */
+.ds-edge { --edge: var(--ds-primary); }
+.ds-edge-alt { --edge: var(--ds-secondary); }
+
+/* Gingham trim, a nod to the old Hi-Mountain uniforms. Two half-strength stripe layers
+   cross to make the classic check: full color where they overlap, half tone where one does. */
+:root[data-edge="gingham"] .ds-edge {
+  --check: 10px;
+  --half: color-mix(in srgb, var(--edge) 45%, transparent);
+  height: calc(var(--check) * 2);
+  background:
+    linear-gradient(90deg, var(--half) 50%, transparent 0) 0 0 / calc(var(--check) * 2) calc(var(--check) * 2),
+    linear-gradient(var(--half) 50%, transparent 0) 0 0 / calc(var(--check) * 2) calc(var(--check) * 2),
+    var(--ds-card);
 }
-.ds-awning-blue {
-  background: repeating-linear-gradient(90deg, var(--color-ds-blue) 0 28px, #fff 28px 56px);
+/* Mountain ridge: the band is the "sky", the paper below it reads as peaks. */
+:root[data-edge="ridge"] .ds-edge {
+  background: var(--edge);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0H240V16L226 24L212 12L200 20L188 8L176 18L164 13L150 26L138 17L126 23L112 6L100 18L88 14L74 25L62 15L50 21L36 9L22 19L10 14L0 16Z'/%3E%3C/svg%3E") 0 0 / 240px 100% repeat-x;
 }
-.ds-scallop {
+/* Pine treeline silhouette */
+:root[data-edge="pines"] .ds-edge {
+  background: var(--edge);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0H240V34L237 34L228 21L219 34L213 34L204 16L195 34L189 34L180 9L171 34L165 34L156 18L147 34L141 34L132 12L123 34L117 34L108 22L99 34L93 34L84 17L75 34L69 34L60 10L51 34L45 34L36 20L27 34L21 34L12 14L3 34L0 34Z'/%3E%3C/svg%3E") 0 0 / 240px 100% repeat-x;
+}
+/* Wood plank with grain and a rough-sawn bottom edge */
+:root[data-edge="wood"] .ds-edge {
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, white 14%, transparent), transparent 30%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--edge) 82%, black) 0 1.5px, var(--edge) 1.5px 7px);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 40' preserveAspectRatio='none'%3E%3Cpath d='M0 0H240L240 31L224 31L208 32L192 29L176 33L160 31L144 34L128 30L112 32L96 31L80 34L64 29L48 33L32 30L16 34L0 31Z'/%3E%3C/svg%3E") 0 0 / 240px 100% repeat-x;
+}
+/* Original striped soda-fountain awning with scalloped edge */
+:root[data-edge="awning"] .ds-edge {
   --r: 14px;
+  background: repeating-linear-gradient(90deg, var(--edge) 0 28px, var(--ds-card) 28px 56px);
   mask: radial-gradient(circle at 50% 100%, transparent var(--r), #000 calc(var(--r) + 1px)) 50% 100% / calc(var(--r) * 2) calc(var(--r) * 2) repeat-x,
     linear-gradient(#000 0 0) 0 0 / 100% calc(100% - var(--r)) no-repeat;
 }
 
+/* Font weights per role come from the type set (src/lib/theme.ts). */
+.ds-site .font-logo { font-weight: var(--ds-logo-weight, 400); }
+.ds-site .font-title { font-weight: var(--ds-title-weight, 400); }
+.ds-site .font-label { font-weight: var(--ds-label-weight, 400); }
+
 /* Oval photo frame echoing the archive prints */
 .ds-oval-frame {
   border-radius: 50%;
-  box-shadow: 0 0 0 6px var(--color-ds-cream), 0 0 0 8px var(--color-ds-mustard), 0 14px 30px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 6px var(--ds-paper), 0 0 0 8px var(--ds-highlight), 0 14px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 

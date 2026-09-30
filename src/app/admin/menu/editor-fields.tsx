@@ -184,13 +184,13 @@ function IngredientsInput({
     <div className="space-y-2">
       <ul className="flex flex-wrap gap-1.5" aria-label={`Ingredients in ${flavor}`}>
         {value.map((i) => (
-          <li key={i} className="inline-flex items-center gap-1 rounded-md bg-ds-blue/10 py-0.5 pr-1 pl-2 text-sm text-ds-blue">
+          <li key={i} className="inline-flex items-center gap-1 rounded-md bg-ds-secondary/10 py-0.5 pr-1 pl-2 text-sm text-ds-secondary">
             {i}
             <button
               type="button"
               aria-label={`Remove ${i} from ${flavor}`}
               onClick={() => onChange(value.filter((x) => x !== i))}
-              className="grid size-4 place-items-center rounded hover:bg-ds-blue/20"
+              className="grid size-4 place-items-center rounded hover:bg-ds-secondary/20"
             >
               <X className="size-3" aria-hidden="true" />
             </button>
@@ -344,7 +344,7 @@ export function ChoicesEditor({ value, onChange, noun }: { value: ChoiceDraft[];
                 <li
                   key={c.name}
                   className={`inline-flex items-center rounded-full border text-sm transition ${
-                    on ? "border-ds-blue bg-ds-blue text-white" : "border-border bg-card"
+                    on ? "border-ds-secondary bg-ds-secondary text-white" : "border-border bg-card"
                   }`}
                 >
                   <button

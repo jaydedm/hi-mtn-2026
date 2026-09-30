@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DIRECTIONS_URL, PHONE_HREF } from "@/lib/site";
 
-const item = "flex flex-col items-center gap-1 py-2.5 font-slab text-xs text-ds-ink";
+const item = "flex flex-col items-center gap-1 py-2.5 font-label text-xs text-ds-ink";
 
 /** Sticky bottom bar on phones: directions, call, menu (or home, when already on the menu). */
 export function MobileActionBar() {
@@ -12,7 +12,7 @@ export function MobileActionBar() {
   return (
     <nav
       aria-label="Quick actions"
-      className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 md:hidden bg-ds-cream border-t-2 border-ds-red"
+      className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-3 md:hidden bg-ds-paper border-t-2 border-ds-primary"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <a href={DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" className={item}>
@@ -28,7 +28,7 @@ export function MobileActionBar() {
         </svg>
         Call
       </a>
-      <Link href={onMenu ? "/" : "/menu"} className={`${item} bg-ds-red text-ds-cream`}>
+      <Link href={onMenu ? "/" : "/menu"} className={`${item} bg-ds-primary text-ds-paper`}>
         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
           <path d={onMenu ? "M3 11l9-7 9 7M5 10v10h5v-6h4v6h5V10" : "M4 6h16M4 12h16M4 18h10"} />
         </svg>

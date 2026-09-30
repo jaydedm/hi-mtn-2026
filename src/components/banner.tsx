@@ -38,10 +38,11 @@ export function BannerBar({ content, onDismiss }: { content: BannerContent; onDi
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const urgent = content.bannerType === "emergency";
-  const tone = urgent ? "bg-ds-red text-white" : "bg-ds-ink text-ds-cream";
-  const chip = urgent ? "bg-white text-ds-red" : "bg-ds-mustard text-ds-ink";
+  // Urgent uses the theme alert color (always a clear red).
+  const tone = urgent ? "bg-ds-alert text-ds-on-alert" : "bg-ds-ink text-ds-paper";
+  const chip = urgent ? "bg-ds-on-alert text-ds-alert" : "bg-ds-highlight text-ds-on-highlight";
   const action =
-    "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 font-slab text-[13px] tracking-wide text-current/85 outline-none transition-colors hover:text-current focus-visible:ring-2 focus-visible:ring-current/60";
+    "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 font-label text-[13px] tracking-wide text-current/85 outline-none transition-colors hover:text-current focus-visible:ring-2 focus-visible:ring-current/60";
   const external = content.linkUrl ? /^https?:/.test(content.linkUrl) : false;
 
   return (
@@ -53,7 +54,7 @@ export function BannerBar({ content, onDismiss }: { content: BannerContent; onDi
             <span className="relative inline-flex">
               {/* Urgent: a single soft ring radiates out from the label once it appears. */}
               {urgent && <span aria-hidden="true" className="absolute inset-0 rounded-full bg-white/70 opacity-0 motion-safe:animate-[ds-ping-once_0.9s_cubic-bezier(0,0,0.2,1)_0.45s_1_both]" />}
-              <span className={`relative rounded-full px-2.5 py-0.5 font-slab text-[11px] uppercase tracking-[0.18em] ${chip}`}>{content.label}</span>
+              <span className={`relative rounded-full px-2.5 py-0.5 font-label text-[11px] uppercase tracking-[0.18em] ${chip}`}>{content.label}</span>
             </span>
           )}
           <span className="font-body text-[15px] font-semibold leading-snug">{content.bannerText}</span>

@@ -13,7 +13,7 @@ export function HouseIcon({ className = "", label }: { className?: string; label
     >
       {label && <title>{label}</title>}
       <path d="M8 1.6 1.4 7.2a.9.9 0 0 0 1.2 1.3l.4-.3v5.6c0 .6.5 1 1 1h8c.5 0 1-.4 1-1V8.2l.4.3a.9.9 0 0 0 1.2-1.3Z" fill="currentColor" />
-      <path d="M8 12.3s-2.3-1.4-2.3-2.9c0-.8.6-1.3 1.2-1.3.5 0 .9.3 1.1.7.2-.4.6-.7 1.1-.7.6 0 1.2.5 1.2 1.3 0 1.5-2.3 2.9-2.3 2.9Z" fill="#fff" />
+      <path d="M8 12.3s-2.3-1.4-2.3-2.9c0-.8.6-1.3 1.2-1.3.5 0 .9.3 1.1.7.2-.4.6-.7 1.1-.7.6 0 1.2.5 1.2 1.3 0 1.5-2.3 2.9-2.3 2.9Z" className="fill-ds-paper" />
     </svg>
   );
 }
@@ -43,7 +43,7 @@ export function HouseMade({ text }: { text: string }) {
 export function Price({ cents, plus = false, className = "" }: { cents: number; plus?: boolean; className?: string }) {
   const [d, c] = formatPrice(cents).split(".");
   return (
-    <span className={`font-slab whitespace-nowrap ${className}`}>
+    <span className={`font-label whitespace-nowrap ${className}`}>
       <span className="sr-only">
         {plus ? "plus " : ""}${formatPrice(cents)}
       </span>
@@ -60,7 +60,7 @@ export function Price({ cents, plus = false, className = "" }: { cents: number; 
 function NameLine({ name, cents }: { name: string; cents: number | null }) {
   return (
     <div className="flex items-baseline gap-2">
-      <h3 className="font-slab text-lg uppercase tracking-wide leading-tight">{name}</h3>
+      <h3 className="font-label text-lg uppercase tracking-wide leading-tight">{name}</h3>
       {cents !== null && (
         <>
           <span className="flex-1 min-w-4 border-b-2 border-dotted border-ds-ink/35 translate-y-[-0.3em]" aria-hidden="true" />
@@ -79,7 +79,7 @@ function Options({ options }: { options: MenuItemDto["options"] }) {
         <li key={o.id} className="flex items-baseline gap-2 italic">
           <span>{o.label}</span>
           <span className="flex-1 min-w-4 border-b border-dotted border-ds-ink/25" aria-hidden="true" />
-          <Price cents={o.priceCents} plus={o.isAddOn} className="not-italic text-ds-blue" />
+          <Price cents={o.priceCents} plus={o.isAddOn} className="not-italic text-ds-secondary" />
         </li>
       ))}
     </ul>
@@ -109,11 +109,11 @@ export function MenuItemRow({ item }: { item: MenuItemDto }) {
 export function ChoiceList({ item, highlight }: { item: MenuItemDto; highlight?: Map<string, ChoiceMatch> | null }) {
   const priced = item.priceCents !== null || item.options.length > 0;
   return (
-    <li className={`break-inside-avoid ${priced ? "rounded-2xl bg-white/70 p-5 ring-2 ring-ds-ink/10 shadow-sm" : ""}`}>
+    <li className={`break-inside-avoid ${priced ? "rounded-2xl bg-ds-card/70 p-5 ring-2 ring-ds-ink/10 shadow-sm" : ""}`}>
       {priced ? (
         <NameLine name={item.name} cents={item.priceCents} />
       ) : (
-        <h3 className="font-slab text-sm uppercase tracking-[0.2em] text-ds-blue">{item.name}</h3>
+        <h3 className="font-label text-sm uppercase tracking-[0.2em] text-ds-secondary">{item.name}</h3>
       )}
       {item.description && (
         <p className="italic text-ds-ink/75">
@@ -133,7 +133,7 @@ export function ChoiceList({ item, highlight }: { item: MenuItemDto; highlight?:
             <li
               key={c.id}
               className={`rounded-sm border px-2 py-0.5 text-sm italic transition ${
-                dim ? "border-transparent opacity-25" : highlight ? "border-(--m-accent) bg-(--m-hit)" : "border-ds-ink/15 bg-ds-cream"
+                dim ? "border-transparent opacity-25" : highlight ? "border-(--m-accent) bg-(--m-hit)" : "border-ds-ink/15 bg-ds-paper"
               }`}
             >
               <HouseMade text={c.name} />
@@ -152,14 +152,14 @@ export function SectionHeader({ section, headingId }: { section: MenuSectionDto;
     <header className="text-center mb-8">
       <div className="flex items-center gap-4">
         <span className="flex-1 border-b-4 border-dotted border-ds-ink/60" aria-hidden="true" />
-        <h2 id={headingId} className="font-slab text-3xl md:text-4xl uppercase text-ds-ink">{section.title}</h2>
+        <h2 id={headingId} className="font-label text-3xl md:text-4xl uppercase text-ds-ink">{section.title}</h2>
         <span className="flex-1 border-b-4 border-dotted border-ds-ink/60" aria-hidden="true" />
       </div>
       {section.intro && <p className="mx-auto mt-4 max-w-2xl text-ds-ink/80">{section.intro}</p>}
       {section.options.length > 0 && (
         <p className="mt-3 flex flex-wrap justify-center gap-2">
           {section.options.map((o) => (
-            <span key={o.id} className="ds-hut bg-ds-mustard/60 px-3 pb-0.5 font-slab text-sm">
+            <span key={o.id} className="ds-hut bg-ds-highlight/60 px-3 pb-0.5 font-label text-sm">
               {o.label} <span aria-hidden="true">{optionPriceLabel(o)}</span>
               <span className="sr-only">
                 {o.isAddOn ? "plus " : ""}${formatPrice(o.priceCents)}

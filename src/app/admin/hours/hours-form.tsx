@@ -39,7 +39,7 @@ function DayBar({ row, invalid }: { row: Row; invalid: boolean }) {
   const split = row.hasAfterHours && row.afterHoursStart ? pct(row.afterHoursStart) : close;
   return (
     <div className="relative h-2.5 rounded-full bg-muted" aria-hidden="true">
-      <div className="absolute inset-y-0 rounded-l-full bg-ds-blue" style={{ left: `${open}%`, width: `${split - open}%` }} />
+      <div className="absolute inset-y-0 rounded-l-full bg-ds-secondary" style={{ left: `${open}%`, width: `${split - open}%` }} />
       {split < close && <div className="absolute inset-y-0 rounded-r-full bg-ds-ink" style={{ left: `${split}%`, width: `${close - split}%` }} />}
     </div>
   );
@@ -90,7 +90,7 @@ export function HoursForm({ initial }: { initial: Row[] }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-5 rounded-full bg-ds-blue" aria-hidden="true" /> Dining Room menu
+          <span className="h-2.5 w-5 rounded-full bg-ds-secondary" aria-hidden="true" /> Dining Room menu
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-5 rounded-full bg-ds-ink" aria-hidden="true" /> After Hours menu

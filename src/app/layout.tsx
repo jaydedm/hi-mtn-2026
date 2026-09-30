@@ -3,6 +3,7 @@ import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { ACTIVE_THEME, themeCss } from "@/lib/theme";
 import "./globals.css";
 
 // Admin dashboard fonts. The public site loads its own in (site)/layout.tsx.
@@ -35,8 +36,16 @@ const GA_ID = "G-GE5E2TPZ76";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning className={`${sans.variable} ${brand.variable}`}>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={`${sans.variable} ${brand.variable}`}
+        data-edge={ACTIVE_THEME.edge}
+        data-type={ACTIVE_THEME.type}
+      >
         <head>
+          {/* Site theme colors (src/lib/theme.ts) as --ds-* variables */}
+          <style dangerouslySetInnerHTML={{ __html: themeCss() }} />
           <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
           <Script id="gtag-init" strategy="afterInteractive">
             {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${GA_ID}');`}

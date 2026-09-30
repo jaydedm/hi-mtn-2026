@@ -132,8 +132,8 @@ export function BannerForm({ initial }: { initial: BannerInput | null }) {
           <div role="radiogroup" aria-label="Banner style" className="grid gap-3 sm:grid-cols-2">
             {(
               [
-                ["casual", Megaphone, "Announcement", "Dark bar with a gold label, for everyday news.", "border-ds-mustard bg-ds-mustard/10"],
-                ["emergency", AlertTriangle, "Urgent", "Red bar, for closures and anything time-critical.", "border-ds-red bg-ds-red/5"],
+                ["casual", Megaphone, "Announcement", "Dark bar with a gold label, for everyday news.", "border-ds-highlight bg-ds-highlight/10"],
+                ["emergency", AlertTriangle, "Urgent", "Red bar, for closures and anything time-critical.", "border-ds-alert bg-ds-alert/5"],
               ] as const
             ).map(([type, Icon, title, desc, on]) => (
               <button
@@ -144,7 +144,7 @@ export function BannerForm({ initial }: { initial: BannerInput | null }) {
                 onClick={() => patch({ bannerType: type })}
                 className={`flex items-start gap-3 rounded-xl border-2 p-3 text-left transition ${data.bannerType === type ? on : "border-border hover:border-input"}`}
               >
-                <Icon className={`mt-0.5 size-5 shrink-0 ${type === "emergency" ? "text-ds-red" : "text-amber-600"}`} aria-hidden="true" />
+                <Icon className={`mt-0.5 size-5 shrink-0 ${type === "emergency" ? "text-ds-alert" : "text-amber-600"}`} aria-hidden="true" />
                 <span>
                   <span className="block text-sm font-semibold">{title}</span>
                   <span className="block text-xs text-muted-foreground">{desc}</span>
@@ -287,9 +287,9 @@ export function BannerForm({ initial }: { initial: BannerInput | null }) {
               }}
               onDismiss={() => {}}
             />
-            <div className="flex items-center justify-between bg-ds-cream px-4 py-2">
-              <span className="font-script text-xl text-ds-red">Hi-Mountain</span>
-              <span className="rounded-full bg-ds-blue px-3 py-1 text-xs font-semibold text-ds-cream">Call</span>
+            <div className="flex items-center justify-between bg-ds-paper px-4 py-2">
+              <span className="font-logo text-xl text-ds-primary">Hi-Mountain</span>
+              <span className="rounded-full bg-ds-secondary px-3 py-1 text-xs font-semibold text-ds-paper">Call</span>
             </div>
           </div>
           {!data.isActive && <p className="mt-2 text-xs text-muted-foreground">The banner is off, so this won’t show yet.</p>}
