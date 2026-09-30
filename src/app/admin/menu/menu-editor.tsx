@@ -498,7 +498,7 @@ function ItemForm({
 
   return (
     <form onSubmit={submit} className="space-y-5" aria-label={item ? `Edit ${item.name}` : "New item"}>
-      <div className="rounded-xl bg-ds-cream p-4 ring-1 ring-ds-ink/10">
+      <div className="rounded-xl bg-ds-paper p-4 ring-1 ring-ds-ink/10">
         <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-ds-ink/60">Preview on the website</p>
         <ul className="text-ds-ink">
           <MenuItemRow item={preview} />

@@ -36,6 +36,10 @@ export function buildFaqs(groups: ScheduleGroup[]): Faq[] {
       a: `Award-winning burgers, fries, and thick milkshakes in dozens of flavors, served from an old-fashioned soda fountain that has been open on Kamas's Main Street since ${FOUNDED_YEAR}. Locals still call it "The Drug Store."`,
     },
     {
+      q: "Can I order online?",
+      a: `No, we don't take online orders. For takeout, give us a call at ${PHONE} and we'll have it ready, or order at the counter when you come in.`,
+    },
+    {
       q: "What are your hours?",
       a: `${hoursSentence(groups)} (Mountain Time).${
         afterHours
@@ -46,10 +50,6 @@ export function buildFaqs(groups: ScheduleGroup[]): Faq[] {
     {
       q: "What's on the After Hours menu?",
       a: "Our full shake and ice cream menu, plus heartier favorites, salads, and box combos. You can see both menus, with prices, on our menu page.",
-    },
-    {
-      q: "How do I contact Hi-Mountain?",
-      a: `Call us at ${PHONE}.`,
     },
   ];
 }

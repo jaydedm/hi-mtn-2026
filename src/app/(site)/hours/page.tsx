@@ -17,38 +17,38 @@ export default async function HoursPage() {
 
   return (
     <section className="mx-auto max-w-3xl px-5 py-16 md:py-24">
-      <h1 className="font-script text-6xl md:text-7xl text-ds-red text-center">Our Hours</h1>
-      <p className="text-center font-slab text-xs tracking-[0.3em] uppercase text-ds-blue mt-3">
+      <h1 className="ds-title font-title text-6xl md:text-7xl text-ds-primary text-center">Our Hours</h1>
+      <p className="text-center font-label text-xs tracking-[0.3em] uppercase text-ds-secondary mt-3">
         All times Mountain Time
       </p>
 
       <div className="mt-8 flex justify-center">
-        <div className="rounded-xl bg-white px-6 py-3 shadow-md ring-1 ring-ds-ink/10">
+        <div className="rounded-xl bg-ds-card px-6 py-3 shadow-md ring-1 ring-ds-ink/10">
           <OpenBadge
             hours={hours}
-            className="font-slab text-lg text-ds-ink"
+            className="font-label text-lg text-ds-ink"
             dotClass="ds-neon shadow-[0_0_8px_currentColor]"
             openText="Open now"
             closedText="Closed now"
             showServing
-            servingClass="mt-1 text-ds-blue"
+            servingClass="mt-1 text-ds-secondary"
           />
         </div>
       </div>
 
-      <div className="mt-10 rounded-3xl bg-white/70 p-6 md:p-8 shadow-xl ring-4 ring-ds-red">
+      <div className="mt-10 rounded-3xl bg-ds-card/70 p-6 md:p-8 shadow-xl ring-4 ring-ds-primary">
         <WeekHours hours={hours} />
       </div>
 
       <div className="mt-12 text-center">
-        <h2 className="font-slab text-2xl">See the menus</h2>
+        <h2 className="font-label text-2xl">See the menus</h2>
         <ul className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
           {MENU_TYPES.map((t) => (
             <li key={t}>
               <Link
                 href={`/menu?menu=${t}`}
-                className={`inline-flex items-center gap-2 rounded-full px-7 py-3 font-slab text-lg shadow-lg transition hover:-translate-y-0.5 ${
-                  t === "lunch" ? "bg-ds-red text-ds-cream" : "bg-ds-blue text-ds-cream"
+                className={`inline-flex items-center gap-2 rounded-full px-7 py-3 font-label text-lg shadow-lg transition hover:-translate-y-0.5 ${
+                  t === "lunch" ? "bg-ds-primary text-ds-paper" : "bg-ds-secondary text-ds-paper"
                 }`}
               >
                 {MENU_INFO[t].title}
@@ -59,8 +59,8 @@ export default async function HoursPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-6 font-slab text-sm">
-          <a href={DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 decoration-ds-mustard">
+        <p className="mt-6 font-label text-sm">
+          <a href={DIRECTIONS_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 decoration-ds-highlight">
             {ADDRESS}
           </a>
         </p>

@@ -36,7 +36,7 @@ export function OpenBadge({
         {s && <span className="opacity-70">· {s.detail}</span>}
       </span>
       {showServing && s?.servingDetail && (
-        <span className={`font-slab text-xs uppercase tracking-widest ${servingClass}`}>Now serving: {s.servingDetail}</span>
+        <span className={`font-label text-xs uppercase tracking-widest ${servingClass}`}>Now serving: {s.servingDetail}</span>
       )}
     </span>
   );

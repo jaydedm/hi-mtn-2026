@@ -16,7 +16,7 @@ function Card({ href, icon: Icon, title, children, cta }: { href: string; icon: 
         <Icon className="size-4" aria-hidden="true" /> {title}
       </span>
       <div className="mt-3 flex-1">{children}</div>
-      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-ds-blue">
+      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-ds-secondary">
         {cta} <ArrowRight className="size-4 transition group-hover:translate-x-0.5" aria-hidden="true" />
       </span>
     </Link>
@@ -44,7 +44,7 @@ export default async function AdminPage() {
         <span className="font-semibold">{now.open ? "Open now" : "Closed now"}</span>
         <span className="text-muted-foreground">· {now.detail}</span>
         {now.servingDetail && (
-          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${now.serving === "after-hours" ? "bg-ds-ink text-ds-cream" : "bg-ds-blue/10 text-ds-blue"}`}>
+          <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${now.serving === "after-hours" ? "bg-ds-ink text-ds-paper" : "bg-ds-secondary/10 text-ds-secondary"}`}>
             Serving {now.servingDetail}
           </span>
         )}

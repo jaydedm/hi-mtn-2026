@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Awning, BurgerMark } from "@/components/site/decor";
+import { BurgerMark, Edge } from "@/components/site/decor";
 import { MenuCards } from "@/components/site/menu-cards";
 import { OpenBadge } from "@/components/site/open-badge";
 import { ScheduleList } from "@/components/site/schedule-list";
@@ -58,13 +58,13 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         <div className="mx-auto max-w-6xl px-5 pt-14 pb-16 md:pt-24 md:pb-28 grid md:grid-cols-[1.1fr_1fr] gap-12 items-center">
           <div className="ds-reveal text-center md:text-left">
-            <p className="font-slab tracking-[0.25em] text-xs uppercase text-ds-blue">
+            <p className="font-label tracking-[0.25em] text-xs uppercase text-ds-secondary">
               Kamas, Utah · Est. 1918
             </p>
-            <h1 className="mt-4 font-script text-[clamp(3.5rem,17vw,7.5rem)] leading-[0.85] text-ds-red">
+            <h1 className="ds-logo mt-4 font-logo text-[clamp(3.5rem,17vw,7.5rem)] leading-[0.85] text-ds-primary">
               Hi-Mountain
             </h1>
-            <p className="mt-2 font-slab text-xl sm:text-2xl md:text-4xl uppercase tracking-wide">
+            <p className="mt-2 font-label text-xl sm:text-2xl md:text-4xl uppercase tracking-wide">
               Burgers · Shakes · Fries
             </p>
             <p className="mt-6 max-w-md text-lg italic text-ds-ink/80 mx-auto md:mx-0">
@@ -76,7 +76,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3 justify-center md:justify-start">
               <Link
                 href="/menu"
-                className="font-slab rounded-full bg-ds-red text-ds-cream px-7 py-3 text-lg shadow-lg hover:-translate-y-0.5 transition"
+                className="font-label rounded-full bg-ds-primary text-ds-paper px-7 py-3 text-lg shadow-lg hover:-translate-y-0.5 transition"
               >
                 See the menus
               </Link>
@@ -84,13 +84,13 @@ export default async function HomePage() {
                 href={DIRECTIONS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-slab rounded-full border-2 border-ds-ink px-7 py-3 text-lg hover:bg-ds-ink hover:text-ds-cream transition"
+                className="font-label rounded-full border-2 border-ds-ink px-7 py-3 text-lg hover:bg-ds-ink hover:text-ds-paper transition"
               >
                 Directions
               </a>
             </div>
             <div className="mt-6 lg:hidden">
-              <OpenBadge hours={hours} className="font-slab text-base" />
+              <OpenBadge hours={hours} className="font-label text-base" />
             </div>
           </div>
 
@@ -128,47 +128,47 @@ export default async function HomePage() {
                 width={360}
                 height={360}
                 sizes="(min-width: 768px) 112px, 88px"
-                className="h-22 w-22 rounded-full shadow-xl ring-4 ring-ds-cream md:h-28 md:w-28"
+                className="h-22 w-22 rounded-full shadow-xl ring-4 ring-ds-paper md:h-28 md:w-28"
               />
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap ds-hut bg-ds-red px-2.5 pb-0.5 font-slab text-xs text-white md:text-sm">
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap ds-hut bg-ds-primary px-2.5 pb-0.5 font-label text-xs text-ds-on-primary md:text-sm">
                 {BEST_OF_STATE_COUNT}× winner
               </span>
             </div>
           </div>
         </div>
-        <Awning blue />
+        <Edge alt />
       </section>
 
       {/* Open status + this week's hours */}
-      <section aria-labelledby="today-heading" className="bg-ds-cream-2/60">
+      <section aria-labelledby="today-heading" className="bg-ds-paper-2/60">
         <div className="mx-auto max-w-5xl px-5 py-12">
-          <div className="grid gap-8 rounded-3xl bg-white p-6 shadow-lg ring-1 ring-ds-ink/10 sm:p-8 md:grid-cols-[1fr_1.4fr] md:gap-10">
+          <div className="grid gap-8 rounded-3xl bg-ds-card p-6 shadow-lg ring-1 ring-ds-ink/10 sm:p-8 md:grid-cols-[1fr_1.4fr] md:gap-10">
             <div className="flex flex-col items-center gap-4 text-center md:items-start md:text-left">
-              <h2 id="today-heading" className="font-slab text-2xl text-ds-ink">
+              <h2 id="today-heading" className="font-label text-2xl text-ds-ink">
                 Hours
               </h2>
-              <div className="rounded-lg bg-ds-cream px-5 py-2 ring-1 ring-ds-ink/10">
+              <div className="rounded-lg bg-ds-paper px-5 py-2 ring-1 ring-ds-ink/10">
                 <OpenBadge
                   hours={hours}
-                  className="font-slab text-base text-ds-ink"
+                  className="font-label text-base text-ds-ink"
                   dotClass="ds-neon shadow-[0_0_8px_currentColor]"
                   openText="Open now"
                   closedText="Closed now"
                   showServing
-                  servingClass="mt-1 text-ds-blue"
+                  servingClass="mt-1 text-ds-secondary"
                 />
               </div>
               <a
                 href={DIRECTIONS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-ds-ink/80 underline underline-offset-4 decoration-ds-ink/30 hover:text-ds-blue"
+                className="text-ds-ink/80 underline underline-offset-4 decoration-ds-ink/30 hover:text-ds-secondary"
               >
                 {ADDRESS}
               </a>
               <Link
                 href="/hours"
-                className="font-slab text-sm text-ds-blue underline underline-offset-4"
+                className="font-label text-sm text-ds-secondary underline underline-offset-4"
               >
                 Full hours &amp; menu times
               </Link>
@@ -187,7 +187,7 @@ export default async function HomePage() {
           <BurgerMark className="h-12 mx-auto" />
           <h2
             id="menus-heading"
-            className="font-script text-6xl text-ds-red mt-2"
+            className="ds-title font-title text-6xl text-ds-primary mt-2"
           >
             Two Menus, One Counter
           </h2>
@@ -200,18 +200,18 @@ export default async function HomePage() {
         <MenuCards hours={hours} online={online} />
       </section>
 
-      <Awning />
+      <Edge />
 
       {/* Story timeline */}
       <section
         id="story"
         aria-labelledby="story-heading"
-        className="bg-ds-cream-2 scroll-mt-[calc(var(--site-header-h,6rem)+1rem)]"
+        className="bg-ds-paper-2 scroll-mt-[calc(var(--site-header-h,6rem)+1rem)]"
       >
         <div className="mx-auto max-w-4xl px-5 py-20">
           <h2
             id="story-heading"
-            className="font-script text-6xl text-ds-red text-center"
+            className="ds-title font-title text-6xl text-ds-primary text-center"
           >
             A Walk Down Memory Lane
           </h2>
@@ -226,24 +226,24 @@ export default async function HomePage() {
       </section>
 
       {/* Area + FAQ: answers the "near Park City / Heber / Uintas" questions people search for */}
-      <section aria-labelledby="faq-heading" className="bg-ds-cream">
+      <section aria-labelledby="faq-heading" className="bg-ds-paper">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(faqJsonLd(faqs)) }} />
         <div className="mx-auto max-w-3xl px-5 py-20">
-          <h2 id="faq-heading" className="font-script text-6xl text-ds-red text-center">
+          <h2 id="faq-heading" className="ds-title font-title text-6xl text-ds-primary text-center">
             Good to Know
           </h2>
           <p className="text-center italic text-ds-ink/75 mt-3 max-w-2xl mx-auto">
             Kamas sits at the gateway to the Uinta Mountains, a quick drive from Park City and
             Heber City. Here&rsquo;s what folks usually ask before they visit.
           </p>
-          <div className="mt-10 divide-y-2 divide-dotted divide-ds-ink/15 rounded-3xl bg-white px-6 shadow-lg ring-1 ring-ds-ink/10 sm:px-8">
+          <div className="mt-10 divide-y-2 divide-dotted divide-ds-ink/15 rounded-3xl bg-ds-card px-6 shadow-lg ring-1 ring-ds-ink/10 sm:px-8">
             {faqs.map((f) => (
               <details key={f.q} className="group py-5">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-slab text-lg text-ds-ink marker:hidden [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-label text-lg text-ds-ink marker:hidden [&::-webkit-details-marker]:hidden">
                   <h3>{f.q}</h3>
                   <span
                     aria-hidden="true"
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ds-cream-2 text-ds-red transition group-open:rotate-45"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ds-paper-2 text-ds-primary transition group-open:rotate-45"
                   >
                     +
                   </span>
@@ -259,36 +259,36 @@ export default async function HomePage() {
       <section
         id="visit"
         aria-labelledby="visit-heading"
-        className="bg-ds-blue text-ds-cream scroll-mt-[calc(var(--site-header-h,6rem)+1rem)]"
+        className="bg-ds-secondary text-ds-paper scroll-mt-[calc(var(--site-header-h,6rem)+1rem)]"
       >
         <div className="mx-auto max-w-5xl px-5 py-20 grid md:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 id="visit-heading" className="font-script text-6xl">
+            <h2 id="visit-heading" className="ds-title font-title text-6xl">
               Come see us
             </h2>
-            <p className="mt-4 text-lg italic text-ds-cream/85">
+            <p className="mt-4 text-lg italic text-ds-paper/85">
               Whether you&rsquo;ve traveled one mile or a thousand, we hope
               you&rsquo;ll agree we&rsquo;re well worth the trip.
             </p>
-            <address className="not-italic mt-6 font-slab text-lg space-y-1">
+            <address className="not-italic mt-6 font-label text-lg space-y-1">
               <a
                 href={DIRECTIONS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block underline underline-offset-4 decoration-ds-mustard"
+                className="block underline underline-offset-4 decoration-ds-highlight"
               >
                 {ADDRESS}
               </a>
               <a
                 href={PHONE_HREF}
-                className="block underline underline-offset-4 decoration-ds-mustard"
+                className="block underline underline-offset-4 decoration-ds-highlight"
               >
                 {PHONE}
               </a>
             </address>
           </div>
-          <div className="rounded-3xl bg-ds-cream text-ds-ink p-8 shadow-2xl">
-            <h3 className="font-slab text-xl mb-4 text-center">
+          <div className="rounded-3xl bg-ds-paper text-ds-ink p-8 shadow-2xl">
+            <h3 className="font-label text-xl mb-4 text-center">
               Hours{" "}
               <span className="text-xs font-body italic opacity-70">
                 (Mountain Time)
@@ -297,7 +297,7 @@ export default async function HomePage() {
             <ScheduleList groups={grouped} />
             <Link
               href="/hours"
-              className="mt-4 block text-center font-slab text-sm text-ds-blue underline underline-offset-4"
+              className="mt-4 block text-center font-label text-sm text-ds-secondary underline underline-offset-4"
             >
               Full hours &amp; menu times
             </Link>

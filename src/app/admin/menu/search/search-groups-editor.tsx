@@ -39,7 +39,7 @@ function TagInput({
     onChange(next);
     setDraft("");
   };
-  const chip = tone === "blue" ? "bg-ds-blue/10 text-ds-blue" : "bg-muted text-foreground";
+  const chip = tone === "blue" ? "bg-ds-secondary/10 text-ds-secondary" : "bg-muted text-foreground";
   return (
     <div>
       <label htmlFor={id} className="mb-1 block text-sm font-medium">

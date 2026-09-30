@@ -20,11 +20,11 @@ export function WeekHours({ hours }: { hours: HoursRow[] }) {
         const w = menuWindows(row);
         const isToday = status?.today === d;
         return (
-          <li key={d} aria-current={isToday ? "date" : undefined} className={`py-3 px-3 rounded-xl ${isToday ? "bg-ds-mustard/30" : ""}`}>
-            <div className="flex items-center justify-between gap-4 font-slab">
+          <li key={d} aria-current={isToday ? "date" : undefined} className={`py-3 px-3 rounded-xl ${isToday ? "bg-ds-highlight/30" : ""}`}>
+            <div className="flex items-center justify-between gap-4 font-label">
               <span className="flex items-center gap-3">
                 {DAY_LONG[d]}
-                {isToday && <span className="ds-hut bg-ds-mustard px-3 pb-0.5 text-xs uppercase tracking-widest">Today</span>}
+                {isToday && <span className="ds-hut bg-ds-highlight px-3 pb-0.5 text-xs uppercase tracking-widest">Today</span>}
               </span>
               <span className={label === "Closed" ? "text-ds-ink/50" : ""}>{label}</span>
             </div>

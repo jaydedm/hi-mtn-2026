@@ -218,7 +218,7 @@ export function ChoiceCard({
 }) {
   const on = {
     neutral: "border-foreground/70 bg-muted/60",
-    blue: "border-ds-blue bg-ds-blue/5",
+    blue: "border-ds-secondary bg-ds-secondary/5",
     ink: "border-ds-ink bg-ds-ink/5",
   }[tone];
   return (
@@ -250,8 +250,8 @@ export function ChoiceCard({
 /** Menu membership badges using the same colors as the public site's schedule pills. */
 export function MenuBadge({ menu }: { menu: "lunch" | "after-hours" }) {
   return menu === "lunch" ? (
-    <span className="rounded-full bg-ds-blue/10 px-2 py-0.5 text-[11px] font-semibold text-ds-blue">Dining Room</span>
+    <span className="rounded-full bg-ds-secondary/10 px-2 py-0.5 text-[11px] font-semibold text-ds-secondary">Dining Room</span>
   ) : (
-    <span className="rounded-full bg-ds-ink px-2 py-0.5 text-[11px] font-semibold text-ds-cream">After Hours</span>
+    <span className="rounded-full bg-ds-ink px-2 py-0.5 text-[11px] font-semibold text-ds-paper">After Hours</span>
   );
 }

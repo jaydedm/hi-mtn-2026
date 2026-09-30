@@ -1,15 +1,23 @@
-import Image from "next/image";
 import burgerIcon from "../../../public/images/burger-icon.png";
 
 /**
- * Hi-Mountain burger mark (red line-art burger). Decorative: pair it with visible
- * text such as the wordmark or a heading. Size it with a height class; width follows.
+ * Hi-Mountain burger mark (line-art burger), tinted with the theme's primary color by using the
+ * PNG as a mask. Decorative: pair it with visible text. Size it with a height class; width follows.
  */
-export function BurgerMark({ className = "", preload = false }: { className?: string; preload?: boolean }) {
-  return <Image src={burgerIcon} alt="" aria-hidden="true" preload={preload} sizes="96px" className={`w-auto ${className}`} />;
+export function BurgerMark({ className = "" }: { className?: string }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={`block bg-ds-primary ${className}`}
+      style={{
+        aspectRatio: `${burgerIcon.width} / ${burgerIcon.height}`,
+        mask: `url(${burgerIcon.src}) center / contain no-repeat`,
+      }}
+    />
+  );
 }
 
-/** Red/cream striped awning with a scalloped edge. Decorative. */
-export function Awning({ blue = false }: { blue?: boolean }) {
-  return <div className={`${blue ? "ds-awning-blue" : "ds-awning"} ds-scallop h-10 w-full`} aria-hidden="true" />;
+/** Themed decorative band (ridge, pines, wood or awning, per data-edge). `alt` uses the secondary color. */
+export function Edge({ alt = false }: { alt?: boolean }) {
+  return <div className={`ds-edge ${alt ? "ds-edge-alt" : ""} h-10 w-full`} aria-hidden="true" />;
 }

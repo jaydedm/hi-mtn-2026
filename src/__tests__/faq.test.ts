@@ -20,6 +20,11 @@ describe("faq", () => {
     expect(hours.a).not.toContain("After Hours");
   });
 
+  it("tells people to call for takeout", () => {
+    const order = buildFaqs(groups).find((f) => f.q === "Can I order online?")!;
+    expect(order.a).toContain("(435) 783-4466");
+  });
+
   it("builds FAQPage JSON-LD with one Question per entry", () => {
     const faqs = buildFaqs(groups);
     const ld = faqJsonLd(faqs);

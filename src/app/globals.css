@@ -11,10 +11,11 @@
   --font-serif: var(--font-serif);
   --font-brand: var(--font-brand);
   --font-mono: var(--font-geist-mono);
-  /* Public site ("Drug Store") fonts, loaded in (site)/layout.tsx */
-  --font-script: var(--font-script);
-  --font-slab: var(--font-slab);
-  --font-body: var(--font-body);
+  /* Public site font roles: font-logo, font-title, font-label, font-body. The type set in
+     src/lib/theme.ts decides which family plays each role. */
+  --font-logo: var(--ds-font-logo);
+  --font-label: var(--ds-font-label);
+  --font-body: var(--ds-font-body);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -63,15 +64,26 @@
   --color-mustard-light: #edb96f;
 }
 
-/* Public site "Drug Store" palette (soda-fountain revival). Emitted as CSS vars
-   so site.css can use them too: bg-ds-red / var(--color-ds-red). */
-@theme {
-  --color-ds-cream: #fbf3e2;
-  --color-ds-cream-2: #f3e6c9;
-  --color-ds-red: #c8322b;
-  --color-ds-blue: #1f4e8c;
-  --color-ds-mustard: #f2b632;
-  --color-ds-ink: #2a1a12;
+/* Public site theme tokens. Values come from src/lib/theme.ts (injected as --ds-* on :root),
+   so utilities like bg-ds-primary, text-ds-night-ink/80 follow the active theme. */
+@theme inline {
+  --color-ds-paper: var(--ds-paper);
+  --color-ds-paper-2: var(--ds-paper-2);
+  --color-ds-card: var(--ds-card);
+  --color-ds-ink: var(--ds-ink);
+  --color-ds-primary: var(--ds-primary);
+  --color-ds-on-primary: var(--ds-on-primary);
+  --color-ds-secondary: var(--ds-secondary);
+  --color-ds-on-secondary: var(--ds-on-secondary);
+  --color-ds-highlight: var(--ds-highlight);
+  --color-ds-on-highlight: var(--ds-on-highlight);
+  --color-ds-alert: var(--ds-alert);
+  --color-ds-on-alert: var(--ds-on-alert);
+  --color-ds-night: var(--ds-night);
+  --color-ds-night-ink: var(--ds-night-ink);
+  --color-ds-glow: var(--ds-glow);
+  --color-ds-glow-soft: var(--ds-glow-soft);
+  --font-title: var(--ds-font-title);
 }
 
 :root {
@@ -160,24 +172,56 @@
   clip-path: polygon(0 var(--roof), 50% 0, 100% var(--roof), 100% 100%, 0 100%);
 }
 
-/* Per-menu accent colors on /menu: red for the Dining Room, neon navy for After Hours.
+/* Per-menu accent colors on /menu: primary for the Dining Room, night colors for After Hours.
    Menu components use them via text-(--m-accent), bg-(--m-accent), etc. */
 .ds-menu-theme {
-  --m-accent: var(--color-ds-red);
-  --m-on-accent: #fff;
-  --m-hit: color-mix(in srgb, var(--color-ds-mustard) 40%, transparent);
-  --m-title: var(--color-ds-red);
+  --m-accent: var(--ds-primary);
+  --m-on-accent: var(--ds-on-primary);
+  --m-hit: color-mix(in srgb, var(--ds-highlight) 40%, transparent);
+  --m-title: var(--ds-primary);
 }
 .ds-menu-theme[data-menu="after-hours"] {
-  --m-accent: #1f4e8c;
-  --m-on-accent: #bfeeff;
-  --m-hit: rgb(92 208 255 / 0.22);
-  --m-title: #1f4e8c;
+  --m-accent: var(--ds-night-ink);
+  --m-on-accent: var(--ds-glow-soft);
+  --m-hit: color-mix(in srgb, var(--ds-glow) 24%, transparent);
+  --m-title: var(--ds-night-ink);
 }
 .ds-menu-title {
   color: var(--m-title);
   transition: color 0.3s, text-shadow 0.3s;
 }
 .ds-menu-theme[data-menu="after-hours"] .ds-menu-title {
-  text-shadow: 0 0 18px rgb(92 208 255 / 0.55);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--ds-glow) 55%, transparent);
+}
+
+/* After Hours "dark mode": while the After Hours tab is showing on /menu, the whole site switches
+   to the night colors. Every component reads the --ds-* tokens, so remapping them here re-themes
+   the page (header, tabs, menu, footer) with no per-component changes. Derived from the active
+   night set, so it follows whatever After Hours look the theme uses. */
+.ds-site:has(.ds-menu-theme[data-menu="after-hours"]) {
+  --ds-paper: var(--ds-night);
+  --ds-paper-2: color-mix(in srgb, var(--ds-night) 90%, white);
+  --ds-card: color-mix(in srgb, var(--ds-night) 84%, white);
+  --ds-ink: var(--ds-glow-soft);
+  --ds-primary: var(--ds-glow);
+  --ds-on-primary: var(--ds-night);
+  --ds-secondary: color-mix(in srgb, var(--ds-glow) 70%, white);
+  --ds-on-secondary: var(--ds-night);
+  --ds-highlight: var(--ds-glow);
+  --ds-on-highlight: var(--ds-night);
+  --ds-night-ink: var(--ds-glow);
+  color-scheme: dark;
+}
+.ds-site:has(.ds-menu-theme[data-menu="after-hours"]) .ds-menu-theme[data-menu="after-hours"] {
+  --m-accent: var(--ds-glow);
+  --m-on-accent: var(--ds-night);
+  --m-title: var(--ds-glow);
+}
+
+/* Day/night switch on /menu: menu-view runs the tab change inside a View Transition, so the
+   browser cross-fades a snapshot of the old page into the new one on the GPU. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: ease;
 }

@@ -112,7 +112,7 @@ export function StoryTimeline({ entries }: { entries: StoryEntry[] }) {
             key={e.year}
             href={`#${slug(e.year)}`}
             aria-current={active === i ? "step" : undefined}
-            className="rounded-full bg-white px-4 py-1.5 font-slab text-sm text-ds-ink shadow-sm ring-1 ring-ds-ink/10 transition hover:bg-ds-blue/10 aria-[current=step]:bg-ds-blue aria-[current=step]:text-white"
+            className="rounded-full bg-ds-card px-4 py-1.5 font-label text-sm text-ds-ink shadow-sm ring-1 ring-ds-ink/10 transition hover:bg-ds-secondary/10 aria-[current=step]:bg-ds-secondary aria-[current=step]:text-ds-on-secondary"
           >
             {e.year}
           </a>
@@ -121,11 +121,11 @@ export function StoryTimeline({ entries }: { entries: StoryEntry[] }) {
 
       <ol ref={listRef} className="relative mt-12">
         {/* Spine + scroll-driven fill */}
-        <span aria-hidden="true" className="absolute inset-y-0 left-5 w-1 -translate-x-1/2 rounded-full bg-ds-blue/15 md:left-1/2" />
+        <span aria-hidden="true" className="absolute inset-y-0 left-5 w-1 -translate-x-1/2 rounded-full bg-ds-secondary/15 md:left-1/2" />
         <span
           aria-hidden="true"
           ref={fillRef}
-          className="absolute inset-y-0 left-5 w-1 origin-top rounded-full bg-ds-red will-change-transform md:left-1/2"
+          className="absolute inset-y-0 left-5 w-1 origin-top rounded-full bg-ds-primary will-change-transform md:left-1/2"
           style={{ transform: "translateX(-50%) scaleY(0)" }}
         />
 
@@ -143,9 +143,9 @@ export function StoryTimeline({ entries }: { entries: StoryEntry[] }) {
               <span
                 aria-hidden="true"
                 data-marker
-                className="group/marker absolute top-1 left-5 z-10 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full bg-white ring-4 ring-ds-cream-2 transition-[background-color,transform] duration-300 data-reached:scale-110 data-reached:bg-ds-red motion-reduce:transition-none md:left-1/2"
+                className="group/marker absolute top-1 left-5 z-10 flex h-9 w-9 -translate-x-1/2 items-center justify-center rounded-full bg-ds-card ring-4 ring-ds-paper-2 transition-[background-color,transform] duration-300 data-reached:scale-110 data-reached:bg-ds-primary motion-reduce:transition-none md:left-1/2"
               >
-                <span className="h-2.5 w-2.5 rounded-full bg-ds-blue/40 transition-colors duration-300 group-data-reached/marker:bg-white" />
+                <span className="h-2.5 w-2.5 rounded-full bg-ds-secondary/40 transition-colors duration-300 group-data-reached/marker:bg-ds-on-primary" />
               </span>
 
               <article
@@ -153,8 +153,8 @@ export function StoryTimeline({ entries }: { entries: StoryEntry[] }) {
                   isShown ? "translate-x-0 opacity-100" : `opacity-0 ${left ? "md:-translate-x-10" : "md:translate-x-10"} translate-y-6 md:translate-y-0`
                 } ${left ? "md:col-start-1 md:text-right" : "md:col-start-2"}`}
               >
-                <p className="font-slab text-4xl leading-none text-ds-blue">{e.year}</p>
-                <h3 className="mt-2 font-slab text-xl text-ds-ink">{e.title}</h3>
+                <p className="font-label text-4xl leading-none text-ds-secondary">{e.year}</p>
+                <h3 className="mt-2 font-label text-xl text-ds-ink">{e.title}</h3>
                 {e.img ? (
                   <div className={`mt-4 flex ${left ? "md:justify-end" : ""}`}>
                     <Image
@@ -169,7 +169,7 @@ export function StoryTimeline({ entries }: { entries: StoryEntry[] }) {
                 ) : null}
                 <p
                   className={`mt-4 text-ds-ink/80 ${
-                    e.img ? "" : "inline-block rounded-2xl bg-white px-5 py-4 text-left shadow-sm ring-1 ring-ds-ink/10"
+                    e.img ? "" : "inline-block rounded-2xl bg-ds-card px-5 py-4 text-left shadow-sm ring-1 ring-ds-ink/10"
                   }`}
                 >
                   {e.text}

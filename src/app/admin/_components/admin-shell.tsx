@@ -43,7 +43,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar */}
       <aside className="hidden md:flex md:flex-col md:gap-6 md:border-r md:border-border md:px-4 md:py-6 md:sticky md:top-0 md:h-screen">
         <Link href="/admin" className="flex items-center gap-2 px-2">
-          <span className="grid size-8 place-items-center rounded-lg bg-ds-red font-brand text-sm font-extrabold text-white">
+          <span className="grid size-8 place-items-center rounded-lg bg-ds-primary font-brand text-sm font-extrabold text-white">
             HM
           </span>
           <span className="leading-tight">
