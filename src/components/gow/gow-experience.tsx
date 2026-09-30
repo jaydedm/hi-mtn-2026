@@ -126,6 +126,7 @@ export function GowExperience() {
           <span className="gow-eye" />
           <span className="gow-eye" />
         </div>
+        <div className="gow-haze" />
       </div>
       {phase === "eyes" && (
         <>
