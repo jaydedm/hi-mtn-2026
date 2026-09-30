@@ -1,4 +1,5 @@
-/* /gow easter egg. Phases are set on <html data-gow="…"> by gow-experience.tsx. */
+/* "gow" easter egg (search the shakes for "gow"). Phases are set on <html data-gow="…"> by
+   gow-experience.tsx. */
 
 .gow-stage {
   position: fixed;
@@ -162,11 +163,11 @@
   filter: blur(1.6px);
 }
 /* Timed from when the eyes phase starts: after a long beat of darkness the eyes open (a slit,
-   a pause, then wide), stare, first blink at ~13.7s, then every 10s. Small and soft, as if the
+   a pause, then wide), stare, first blink at ~15.2s, then every 10s. Small and soft, as if the
    thing is standing far off in the dark. */
 .gow-eye { height: 0; }
 :root[data-gow="eyes"] .gow-eye {
-  animation: gow-open 1.3s 1.2s ease-out both, gow-blink 10s 4.2s infinite, gow-glow 3.2s ease-in-out infinite;
+  animation: gow-open 1.3s 2.7s ease-out both, gow-blink 10s 5.7s infinite, gow-glow 3.2s ease-in-out infinite;
 }
 @keyframes gow-open {
   0% { height: 0; }

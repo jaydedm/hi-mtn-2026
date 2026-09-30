@@ -31,17 +31,21 @@ function bands(): [number, number][] {
 }
 
 /**
- * The /gow easter egg. The real home page renders underneath; this runs a timeline on top of it:
+ * The "gow" easter egg, set off by searching the shakes for "gow" on /menu. It runs a timeline
+ * over the live page:
  * calm, then unease (micro jitters), then a glitch (colour split, slicing), then the page breaks
  * into glitching bands that blink out one by one, then darkness, then two glowing red eyes that
  * follow the pointer and blink.
+ *
+ * `startAt` skips the opening phases and `inPlace` keeps the reader's scroll position (the menu
+ * trigger uses both).
  *
  * The break-up works by cloning the live page into full-screen layers, each clipped to one
  * horizontal band, with its own random jumps and cut-out time. With reduced motion, the page just
  * fades to black before the eyes appear, and nothing flashes.
  */
-export function GowExperience() {
-  const [phase, setPhase] = useState<Phase>("calm");
+export function GowExperience({ startAt = "calm", inPlace = false }: { startAt?: Phase; inPlace?: boolean } = {}) {
+  const [phase, setPhase] = useState<Phase>(startAt);
   const [mounted, setMounted] = useState(false);
   const tearRef = useRef<HTMLDivElement>(null);
   const eyesRef = useRef<HTMLDivElement>(null);
@@ -49,16 +53,15 @@ export function GowExperience() {
   // Run the timeline once.
   useEffect(() => {
     // Portals need document.body, which only exists after mount.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
-    window.scrollTo(0, 0);
+    if (!inPlace) window.scrollTo(0, 0);
     const root = document.documentElement;
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     const timers: number[] = [];
     let at = 0;
-    for (const [p, ms] of TIMELINE) {
+    for (const [p, ms] of TIMELINE.slice(TIMELINE.findIndex(([p]) => p === startAt))) {
       timers.push(window.setTimeout(() => setPhase(p), at));
       at += ms;
     }
@@ -67,6 +70,8 @@ export function GowExperience() {
       document.body.style.overflow = prevOverflow;
       delete root.dataset.gow;
     };
+    // Runs once; props are fixed for the life of the experience.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Phase classes on <html> drive the CSS (jitter, glitch, hiding the real page).
@@ -89,6 +94,8 @@ export function GowExperience() {
       piece.style.setProperty("--jitter", `${rand(0.12, 0.3).toFixed(2)}s`);
       piece.style.setProperty("--gone", `${rand(150, 950).toFixed(0)}ms`);
       const copy = site.cloneNode(true) as HTMLElement;
+      // Line the copy up with what's on screen right now (the reader may be scrolled down).
+      copy.style.transform = `translateY(${-window.scrollY}px)`;
       copy.setAttribute("aria-hidden", "true");
       copy.inert = true;
       piece.appendChild(copy);
