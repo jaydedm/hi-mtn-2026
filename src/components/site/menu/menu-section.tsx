@@ -1,8 +1,12 @@
 "use client";
 
 import { useId, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { matchChoice, searchKey, searchTerms, type ChoiceMatch, type MenuSectionDto, type SearchGroupDto } from "@/lib/menu-model";
 import { ChoiceList, HouseMade, MenuItemRow, SectionHeader } from "./menu-parts";
+
+// Secret: searching the shakes for "gow" sets it loose. Loaded only when triggered.
+const GowExperience = dynamic(() => import("@/components/gow/gow-experience").then((m) => m.GowExperience), { ssr: false });
 
 /**
  * One menu section. Priced items list in two columns; items with choice lists
@@ -47,6 +51,7 @@ export function MenuSectionView({
 
 function SearchableLists({ section, groups }: { section: MenuSectionDto; groups: SearchGroupDto[] }) {
   const [q, setQ] = useState("");
+  const [summoned, setSummoned] = useState(false);
   const id = useId();
   const lists = section.items.filter((i) => i.choices.length > 0);
   const nouns = [...new Set(lists.map((i) => (i.choicesLabel ?? "choices").toLowerCase()))].join(" or ");
@@ -77,6 +82,7 @@ function SearchableLists({ section, groups }: { section: MenuSectionDto; groups:
 
   return (
     <>
+      {summoned && <GowExperience startAt="unease" inPlace />}
       <div className="mx-auto mb-8 max-w-md">
         <label htmlFor={id} className="block text-center font-label text-sm uppercase tracking-widest text-ds-secondary mb-2">
           Find a flavor
@@ -85,7 +91,13 @@ function SearchableLists({ section, groups }: { section: MenuSectionDto; groups:
           id={id}
           type="search"
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onChange={(e) => {
+            setQ(e.target.value);
+            if (searchKey(e.target.value) === "gow") {
+              e.target.blur();
+              setSummoned(true);
+            }
+          }}
           placeholder="Try “cheesecake”, “coconut” or “nuts”"
           className="w-full rounded-full border-2 border-ds-ink/20 bg-ds-card px-5 py-2.5 text-base outline-none focus-visible:border-(--m-accent) focus-visible:ring-4 focus-visible:ring-(--m-accent)/20"
         />
