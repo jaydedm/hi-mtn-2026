@@ -172,7 +172,7 @@
   clip-path: polygon(0 var(--roof), 50% 0, 100% var(--roof), 100% 100%, 0 100%);
 }
 
-/* Per-menu accent colors on /menu: primary for the Dining Room, night colors for After Hours.
+/* Per-menu accent colors on /menu: primary for Lunch, night colors for After Hours.
    Menu components use them via text-(--m-accent), bg-(--m-accent), etc. */
 .ds-menu-theme {
   --m-accent: var(--ds-primary);

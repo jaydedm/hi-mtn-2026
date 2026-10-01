@@ -8,7 +8,7 @@ import { MenuSectionView } from "./menu-section";
 import { SectionChips } from "./section-chips";
 
 /**
- * Dining Room / After Hours tabs over the online menu. Both menus are server-rendered
+ * Lunch / After Hours tabs over the online menu. Both menus are server-rendered
  * (hidden panel uses `hidden`), so all items are in the HTML for search engines.
  */
 export function MenuView({
@@ -89,7 +89,7 @@ export function MenuView({
                 tabIndex={on ? 0 : -1}
                 onClick={() => select(t)}
                 onKeyDown={(e) => onKey(e, i)}
-                // Matches the home-page menu cards: Dining Room is a light card with a primary ring,
+                // Matches the home-page menu cards: Lunch is a light card with a primary ring,
                 // After Hours uses the theme's night colors.
                 className={`flex-1 rounded-full px-4 py-2 text-center transition ${
                   on

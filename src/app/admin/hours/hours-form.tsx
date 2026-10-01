@@ -29,7 +29,7 @@ type Row = {
 const pct = (t: string) => ((Math.min(SCALE_END, Math.max(SCALE_START, toMinutes(t))) - SCALE_START) / (SCALE_END - SCALE_START)) * 100;
 const same = (a: Row[], b: Row[]) => JSON.stringify(a) === JSON.stringify(b);
 
-/** Proportional bar of the day: Dining Room (blue) then After Hours (dark), on a 6am–midnight scale. */
+/** Proportional bar of the day: Lunch (blue) then After Hours (dark), on a 6am–midnight scale. */
 function DayBar({ row, invalid }: { row: Row; invalid: boolean }) {
   if (row.isClosed || !row.openTime || !row.closeTime || invalid) {
     return <div className="h-2.5 rounded-full bg-muted" aria-hidden="true" />;
@@ -90,7 +90,7 @@ export function HoursForm({ initial }: { initial: Row[] }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-5 rounded-full bg-ds-secondary" aria-hidden="true" /> Dining Room menu
+          <span className="h-2.5 w-5 rounded-full bg-ds-secondary" aria-hidden="true" /> Lunch Menu
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-5 rounded-full bg-ds-ink" aria-hidden="true" /> After Hours menu
@@ -162,8 +162,8 @@ export function HoursForm({ initial }: { initial: Row[] }) {
                       row.closeTime && (
                         <p className="text-xs text-muted-foreground">
                           {row.hasAfterHours && row.afterHoursStart
-                            ? `Dining Room ${fmtTime(row.openTime)}–${fmtTime(row.afterHoursStart)}, then After Hours until ${fmtTime(row.closeTime)}`
-                            : `Dining Room menu ${fmtTime(row.openTime)}–${fmtTime(row.closeTime)}`}
+                            ? `Lunch ${fmtTime(row.openTime)}–${fmtTime(row.afterHoursStart)}, then After Hours until ${fmtTime(row.closeTime)}`
+                            : `Lunch Menu ${fmtTime(row.openTime)}–${fmtTime(row.closeTime)}`}
                         </p>
                       )
                     )}

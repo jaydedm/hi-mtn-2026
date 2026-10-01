@@ -43,7 +43,7 @@ export function buildFaqs(groups: ScheduleGroup[]): Faq[] {
       q: "What are your hours?",
       a: `${hoursSentence(groups)} (Mountain Time).${
         afterHours
-          ? ` On ${afterHours.days}, the Dining Room menu runs ${afterHours.lunch ?? afterHours.dining}, then After Hours runs ${afterHours.afterHours}.`
+          ? ` On ${afterHours.days}, the Lunch Menu runs ${afterHours.lunch ?? afterHours.dining}, then After Hours runs ${afterHours.afterHours}.`
           : ""
       } Current hours are always on our hours page.`,
     },

@@ -2,8 +2,8 @@ import type { ScheduleGroup } from "@/lib/menu-schedule";
 
 /**
  * One split pill per day, so each menu's label sits right on top of its time:
- *   [ DINING ROOM  11am – 4pm | AFTER HOURS  4pm – 8pm ]
- * Pass only `lunch` for Dining-Room-only days, only `afterHours` for After-Hours-only days.
+ *   [ LUNCH  11am – 4pm | AFTER HOURS  4pm – 8pm ]
+ * Pass only `lunch` for Lunch-only days, only `afterHours` for After-Hours-only days.
  */
 export function MenuSegments({ lunch, afterHours, day }: { lunch: string | null; afterHours: string | null; day: string }) {
   if (!lunch && !afterHours) return null;
@@ -11,7 +11,7 @@ export function MenuSegments({ lunch, afterHours, day }: { lunch: string | null;
     <ul aria-label={`Menu times, ${day}`} className="mt-2 flex overflow-hidden rounded-2xl ring-1 ring-ds-ink/15 text-center">
       {lunch && (
         <li className="flex-1 bg-ds-secondary/10 px-3 py-1.5 text-ds-secondary">
-          <span className="block font-label text-[10px] uppercase tracking-wider">Dining Room</span>
+          <span className="block font-label text-[10px] uppercase tracking-wider">Lunch</span>
           <span className="block text-sm font-semibold">{lunch}</span>
         </li>
       )}

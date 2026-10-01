@@ -152,7 +152,7 @@ describe("openStatus", () => {
       detail: "Closes 8pm",
       today: 1,
       serving: "lunch",
-      servingDetail: "Dining Room until 4pm",
+      servingDetail: "Lunch until 4pm",
     });
   });
 
@@ -161,7 +161,7 @@ describe("openStatus", () => {
   });
 
   it("serves lunch until close on days without After Hours", () => {
-    expect(openStatus(weekdays, on(0, 17))).toMatchObject({ serving: "lunch", servingDetail: "Dining Room until 8pm" });
+    expect(openStatus(weekdays, on(0, 17))).toMatchObject({ serving: "lunch", servingDetail: "Lunch until 8pm" });
   });
 
   it("reports opening later today", () => {

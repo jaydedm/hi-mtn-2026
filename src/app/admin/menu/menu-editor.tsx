@@ -153,7 +153,7 @@ export function MenuEditor({ initial }: { initial: MenuSectionDto[] }) {
           onChange={setFilter}
           options={[
             ["all", "All items"],
-            ["lunch", "Dining Room"],
+            ["lunch", "Lunch"],
             ["after-hours", "After Hours"],
           ]}
         />
@@ -262,7 +262,7 @@ export function MenuEditor({ initial }: { initial: MenuSectionDto[] }) {
                   })}
                   {items.length === 0 && (
                     <li className="px-5 py-6 text-center text-sm text-muted-foreground">
-                      {filter === "all" ? "No items yet." : `No ${filter === "lunch" ? "Dining Room" : "After Hours"} items in this section.`}
+                      {filter === "all" ? "No items yet." : `No ${filter === "lunch" ? "Lunch" : "After Hours"} items in this section.`}
                     </li>
                   )}
                 </ul>
@@ -527,7 +527,7 @@ function ItemForm({
 
       <Group n={2} title="Where it shows">
         <div className="grid gap-2 sm:grid-cols-2">
-          <ChoiceCard tone="blue" checked={onLunch} onChange={setOnLunch} title="Dining Room menu" description="The full menu, before After Hours starts" />
+          <ChoiceCard tone="blue" checked={onLunch} onChange={setOnLunch} title="Lunch Menu" description="The full menu, before After Hours starts" />
           <ChoiceCard tone="ink" checked={onAfterHours} onChange={setOnAfterHours} title="After Hours menu" description="Shakes, ice cream and box combos" />
         </div>
         {!onLunch && !onAfterHours && <p className="text-xs font-medium text-amber-700">Pick at least one menu, or this item won’t appear anywhere.</p>}

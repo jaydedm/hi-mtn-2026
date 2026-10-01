@@ -16,8 +16,8 @@ export const MENU_INFO: Record<
   { title: string; name: string; blurb: string }
 > = {
   lunch: {
-    title: "Dining Room Menu",
-    name: "Dining Room",
+    title: "Lunch Menu",
+    name: "Lunch",
     blurb:
       "The full grill: award-winning burgers, sandwiches, salads, sides, shakes and more.",
   },
@@ -99,7 +99,7 @@ export type ScheduleGroup = {
   hours: string;
   lunch: string | null;
   afterHours: string | null;
-  /** Dining Room window on any day it is served (even without After Hours), for the hours table. */
+  /** Lunch window on any day it is served (even without After Hours), for the hours table. */
   dining: string | null;
 };
 

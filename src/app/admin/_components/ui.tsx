@@ -79,7 +79,7 @@ export function SaveToast({ state, onDismiss }: { state: SaveState; onDismiss: (
   );
 }
 
-/** Pill-shaped single-select, e.g. All / Dining Room / After Hours. */
+/** Pill-shaped single-select, e.g. All / Lunch / After Hours. */
 export function Segmented<T extends string>({
   value,
   onChange,
@@ -250,7 +250,7 @@ export function ChoiceCard({
 /** Menu membership badges using the same colors as the public site's schedule pills. */
 export function MenuBadge({ menu }: { menu: "lunch" | "after-hours" }) {
   return menu === "lunch" ? (
-    <span className="rounded-full bg-ds-secondary/10 px-2 py-0.5 text-[11px] font-semibold text-ds-secondary">Dining Room</span>
+    <span className="rounded-full bg-ds-secondary/10 px-2 py-0.5 text-[11px] font-semibold text-ds-secondary">Lunch</span>
   ) : (
     <span className="rounded-full bg-ds-ink px-2 py-0.5 text-[11px] font-semibold text-ds-paper">After Hours</span>
   );

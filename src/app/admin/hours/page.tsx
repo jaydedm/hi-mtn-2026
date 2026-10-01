@@ -20,7 +20,7 @@ export default async function AdminHoursPage() {
     <div>
       <PageHeader
         title="Hours"
-        description="When you’re open, and when the menu switches from Dining Room to After Hours. All times are Mountain Time. The website updates as soon as you save."
+        description="When you’re open, and when the menu switches from Lunch to After Hours. All times are Mountain Time. The website updates as soon as you save."
       />
       <HoursForm initial={serialized} />
     </div>
