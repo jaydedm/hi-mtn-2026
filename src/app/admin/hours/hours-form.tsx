@@ -90,7 +90,7 @@ export function HoursForm({ initial }: { initial: Row[] }) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-5 rounded-full bg-ds-secondary" aria-hidden="true" /> Lunch Menu
+          <span className="h-2.5 w-5 rounded-full bg-ds-secondary" aria-hidden="true" /> Lunch menu
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-5 rounded-full bg-ds-ink" aria-hidden="true" /> After Hours menu
@@ -163,7 +163,7 @@ export function HoursForm({ initial }: { initial: Row[] }) {
                         <p className="text-xs text-muted-foreground">
                           {row.hasAfterHours && row.afterHoursStart
                             ? `Lunch ${fmtTime(row.openTime)}–${fmtTime(row.afterHoursStart)}, then After Hours until ${fmtTime(row.closeTime)}`
-                            : `Lunch Menu ${fmtTime(row.openTime)}–${fmtTime(row.closeTime)}`}
+                            : `Lunch menu ${fmtTime(row.openTime)}–${fmtTime(row.closeTime)}`}
                         </p>
                       )
                     )}

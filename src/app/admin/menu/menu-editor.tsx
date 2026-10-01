@@ -527,7 +527,7 @@ function ItemForm({
 
       <Group n={2} title="Where it shows">
         <div className="grid gap-2 sm:grid-cols-2">
-          <ChoiceCard tone="blue" checked={onLunch} onChange={setOnLunch} title="Lunch Menu" description="The full menu, before After Hours starts" />
+          <ChoiceCard tone="blue" checked={onLunch} onChange={setOnLunch} title="Lunch menu" description="The full menu, before After Hours starts" />
           <ChoiceCard tone="ink" checked={onAfterHours} onChange={setOnAfterHours} title="After Hours menu" description="Shakes, ice cream and box combos" />
         </div>
         {!onLunch && !onAfterHours && <p className="text-xs font-medium text-amber-700">Pick at least one menu, or this item won’t appear anywhere.</p>}

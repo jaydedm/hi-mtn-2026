@@ -2,7 +2,7 @@ import type { HoursRow } from "@/lib/hours-logic";
 import { DAY_SHORT, fmtTime, isRowOpen, rowLabel } from "@/lib/hours-format";
 
 /**
- * Two menus, one dining room. Each open day runs the Lunch menu (the full grill)
+ * Two menus. Each open day runs the Lunch menu (the full grill)
  * from open until `afterHoursStart`, then "Hi-Mountain After Hours" (shakes, ice
  * cream, fryer dinner items) until close. Days without `afterHoursStart` serve
  * Lunch all day. Pure logic, safe for client components.
